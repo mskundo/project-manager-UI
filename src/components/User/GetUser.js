@@ -17,7 +17,6 @@ export default class GetUser extends React.Component {
                     <tr>
                         <td key={data.userId} className='jumbotron'>{data.empId}</td>
                     </tr><br />
-
                 </tbody>
             )
         )
