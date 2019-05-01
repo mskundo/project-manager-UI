@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios';
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import  { Search } from 'react-bootstrap-table2-toolkit';
 
 export default class AddProject extends React.Component {
     constructor(props) {
@@ -14,7 +13,8 @@ export default class AddProject extends React.Component {
             value: true,
             projectName: '',
             allUsers: [],
-            filterKeyword: ''
+            filterKeyword: '',
+            getProjects:[]
         };
         const { SearchBar } = Search;
     }
@@ -100,6 +100,18 @@ export default class AddProject extends React.Component {
         }
         axios.post("http://localhost:9091/projectmanager/projects/saveProject", project).then(res => {
             this.setState({ addProject: res.data })
+            this.getProject()
+        })
+    }
+
+    getProject() {
+        axios.get("http://localhost:9091/projectmanager/projects/getProjects").then(res => {
+            this.setState({ getProjects: res.data })
+            this.state.getProjects.map(data=>
+                axios.get("http://localhost:9091/projectmanager/tasks/getProjectDetail/"+ data.projectId).then(res=>{
+                    console.log(res.data)
+                })
+                )
         })
     }
 

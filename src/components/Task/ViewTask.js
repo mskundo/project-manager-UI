@@ -18,6 +18,7 @@ class ViewTask extends React.Component {
 
     componentWillMount() {
         axios.get("http://localhost:9091/projectmanager/projects/getProjects").then(res => {
+            console.log(res.data)
             this.setState({ projectDetails: res.data })
         });
     }
@@ -118,5 +119,7 @@ class ViewTask extends React.Component {
             </div>
         )
     }
+
 }
+
 export default ViewTask;
