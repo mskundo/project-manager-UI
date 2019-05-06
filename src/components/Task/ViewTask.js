@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios'
-import ShowTask from './ShowTask'
+import AddTask from './AddTask'
+import { Route } from "react-router-dom";
 
 class ViewTask extends React.Component {
 
@@ -12,13 +13,17 @@ class ViewTask extends React.Component {
             filterKeyword: '',
             details: [],
             projectName: '',
-            taskDetails: []
+            taskDetails: [],
+            id: '',
+            taskName: '',
+            startDate: '',
+            endDate: '',
+            priority: 0
         };
     }
 
     componentWillMount() {
         axios.get("http://localhost:9091/projectmanager/projects/getProjects").then(res => {
-            console.log(res.data)
             this.setState({ projectDetails: res.data })
         });
     }
@@ -28,12 +33,46 @@ class ViewTask extends React.Component {
     }
 
     rowClicked(projectDetails) {
-        this.state.details = projectDetails
+        this.setState({ details: projectDetails })
         this.setState({ details: projectDetails })
         this.setState({ projectName: projectDetails.projectName })
         axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + projectDetails.projectId).then(res => {
             this.setState({ taskDetails: res.data })
         })
+    }
+
+    updateTask(id, name, startDate, endDate, priority) {
+        this.setState({ id: id });
+        this.setState({ taskName: name });
+        this.setState({ startDate: startDate });
+        this.setState({ endDate: endDate });
+        this.setState({ priority: priority });
+        return (<Route path="/AddTask" component={AddTask} />)
+    }
+
+    renderTask() {
+        return (
+            this.state.taskDetails.map(data =>
+                <tr>
+                    <td key={data.taskId} className='jumbotron'>{data.taskName}</td>
+                    <td key={data.startDate} >{data.startDate}</td>
+                    <td key={data.endDate} >{data.endDate}</td>
+                    <td key={data.priority}>{data.priority}</td>
+                    <td>
+                        <div className='row'>
+                            <div className='col-md-4'>
+                                <button type="button" className="btn btn-primary" onClick={this.updateTask.bind(this, data.taskId,
+                                    data.taskName, data.startDate, data.endDate, data.priority)}>UPDATE</button>
+                            </div>
+                            <div className='col-md-4'>
+                                <button type="button" className="btn btn-danger">SUSPEND</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            )
+        )
     }
 
     render() {
@@ -114,7 +153,27 @@ class ViewTask extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <ShowTask taskData={this.state.taskDetails} />
+                    <div className='row'>
+                        <div className='col-md-2'></div>
+                        <div className='col-md-9'>
+                            <table className="table table-borderless table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th className="text-center">TASK NAME</th>
+                                        <th className="text-center">START DATE</th>
+                                        <th className="text-center">END DATE</th>
+                                        <th className="text-center">PRIORITY</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.renderTask()}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className='col-md-1'></div>
+                    </div>
                 </form>
             </div>
         )

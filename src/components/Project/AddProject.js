@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios';
-import  { Search } from 'react-bootstrap-table2-toolkit';
 
 export default class AddProject extends React.Component {
     constructor(props) {
@@ -16,7 +15,6 @@ export default class AddProject extends React.Component {
             filterKeyword: '',
             getProjects:[]
         };
-        const { SearchBar } = Search;
     }
 
     onProjectChange(e) {
