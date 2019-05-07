@@ -116,10 +116,11 @@ export default class AddProject extends React.Component {
     render() {
         let filteredItems;
         if (this.state.usersDetails) {
-            filteredItems = this.state.usersDetails.filter(userDetails => userDetails.firstName.toUpperCase().includes(this.state.filterKeyword.toUpperCase())).map((userDetails, index) => {
+            filteredItems = this.state.usersDetails.filter(userDetails => userDetails.firstName.toUpperCase().includes(this.state.filterKeyword.toUpperCase()) ||
+            userDetails.empId.toUpperCase().includes(this.state.filterKeyword.toUpperCase()) ).map((userDetails, index) => {
                 return (
                     <tr data-dismiss='modal' onClick={this.rowClicked.bind(this, userDetails)}>
-                        <td key={index + userDetails.userId}> {userDetails.userId} </td>
+                        <td key={index + userDetails.userId}> {userDetails.empId} </td>
                         <td key={index + userDetails.firstName}> {userDetails.firstName} {userDetails.lastName}</td>
                     </tr>
                 );

@@ -196,7 +196,6 @@ class AddUser extends React.Component {
             </div>
         )
     }
-
 }
 
 export default AddUser;
