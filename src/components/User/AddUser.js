@@ -141,7 +141,7 @@ class AddUser extends React.Component {
                             <label>Last Name :</label>
                         </div>
                         <div className='col-md-4'>
-                            {this.state.flag === false ?
+                             {this.state.flag === false ?
                                 <input type='text' className="form-control" name='lastName' value={this.state.lastName}
                                     onChange={this.onLastChange.bind(this)} />
                                 : <input type='text' className="form-control" value={this.state.lastName}

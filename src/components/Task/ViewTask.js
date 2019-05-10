@@ -54,7 +54,7 @@ class ViewTask extends React.Component {
         return (
             this.state.taskDetails.map(data =>
                 <tr>
-                    <td key={data.taskId} className='jumbotron'>{data.taskName}</td>
+                    <td key={data.taskName} className='jumbotron'>{data.taskName}</td>
                     <td key={data.startDate} >{data.startDate}</td>
                     <td key={data.endDate} >{data.endDate}</td>
                     <td key={data.priority}>{data.priority}</td>
@@ -178,7 +178,6 @@ class ViewTask extends React.Component {
             </div>
         )
     }
-
 }
 
 export default ViewTask;

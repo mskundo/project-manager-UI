@@ -256,7 +256,7 @@ class AddTask extends React.Component {
               <label>Parent Task :</label>
             </div>
             <div className="col-sm-8">
-              <input type="text" className="form-control" placeholder={this.state.parentTask} disabled={!this.state.value} disabled/>
+              <input type="text" className="form-control" placeholder={this.state.parentTask} disabled={!this.state.value} disabled />
             </div>
             <div className="col-sm-1">
               <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal2" disabled={!this.state.value} >
@@ -311,7 +311,7 @@ class AddTask extends React.Component {
               <label>User:</label>
             </div>
             <div className="col-sm-8">
-              <input type="text" className="form-control" placeholder={this.state.user} disabled={!this.state.value} disabled/>
+              <input type="text" className="form-control" placeholder={this.state.user} disabled={!this.state.value} disabled />
             </div>
             <div className="col-sm-1">
               <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal3" disabled={!this.state.value}>Search </button>
