@@ -79,6 +79,11 @@ export default class AddProject extends React.Component {
             let usersDetails = res.data;
             this.setState({ usersDetails })
         });
+
+        axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
+            console.log(res.data)
+            this.setState({ getProjects: res.data })
+        })
     }
 
     rowClicked = (userDetails) => {
@@ -100,17 +105,52 @@ export default class AddProject extends React.Component {
             this.setState({ addProject: res.data })
             this.getProject()
         })
+        this.setState(prevState => ({
+            startDate: '',
+            endDate: '',
+            priority: '0',
+            value: true,
+            projectName: '',
+            usersDetails: [],
+            selectRowProp: [],
+            filterKeyword: "",
+            projectManager: '',
+            managerDetails: [],
+            addProject: []
+        }))
     }
 
     getProject() {
-        axios.get("http://localhost:9091/projectmanager/projects/getProjects").then(res => {
+        axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
+            console.log(res.data)
             this.setState({ getProjects: res.data })
-            this.state.getProjects.map(data=>
-                axios.get("http://localhost:9091/projectmanager/tasks/getProjectDetail/"+ data.projectId).then(res=>{
-                    console.log(res.data)
-                })
-                )
         })
+    }
+
+    renderProject() {
+        return (
+            this.state.getProjects.map(data =>
+                <tbody>
+                    <tr>
+                        <td key={data.projectRecord.projectId} className='jumbotron'>{data.projectRecord.projectName}</td>
+                        <td>
+                            <button type="button" className="btn btn-primary">UPDATE</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td key={data.projectRecord.priority} className='jumbotron'>{data.projectRecord.priority}</td>
+                        <td>
+                            <button type="button" className="btn btn-danger">DELETE</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td key={data.completedTask} className='jumbotron'>{data.completedTask}</td>
+                        <td key={data.noOfTask} className='jumbotron'>{data.noOfTask}</td>
+                    </tr>
+                    <br />
+                </tbody>
+            )
+        )
     }
 
     render() {
@@ -229,6 +269,15 @@ export default class AddProject extends React.Component {
                         </div>
                     </div><br />
                 </form>
+                <div className="row">
+                        <div className='col-md-2'></div>
+                        <div className='col-md-8'>
+                            <table className="table table-borderless table-condensed">
+                                {this.renderProject()}
+                            </table>
+                        </div>
+                        <div className='col-md-2'></div>
+                    </div>
             </div>
         )
     }
