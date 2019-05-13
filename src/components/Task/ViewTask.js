@@ -37,6 +37,7 @@ class ViewTask extends React.Component {
         this.setState({ details: projectDetails })
         this.setState({ projectName: projectDetails.projectName })
         axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + projectDetails.projectId).then(res => {
+            console.log(res.data )
             this.setState({ taskDetails: res.data })
         })
     }

@@ -19,7 +19,7 @@ class AddTask extends React.Component {
       parentTaskDetails: [],
       parentTask: "",
       user: "",
-      status: "In Progress",
+      status: "",
       usersDetails: []
     };
   }
@@ -109,7 +109,8 @@ class AddTask extends React.Component {
     e.preventDefault();
     if (this.state.value === false) {
       const parentTask = {
-        taskName: this.state.taskName
+        taskName: this.state.taskName,
+        user: this.state.userDetail
       }
       axios.post("http://localhost:9091/projectmanager/parentTask/save", parentTask)
         .then(res => {

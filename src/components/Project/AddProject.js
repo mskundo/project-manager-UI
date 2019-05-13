@@ -80,10 +80,10 @@ export default class AddProject extends React.Component {
             this.setState({ usersDetails })
         });
 
-        axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
-            console.log(res.data)
-            this.setState({ getProjects: res.data })
-        })
+        // axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
+        //     console.log(res.data)
+        //     this.setState({ getProjects: res.data })
+        // })
     }
 
     rowClicked = (userDetails) => {
@@ -225,7 +225,7 @@ export default class AddProject extends React.Component {
                             <input type='text' className="form-control" name='manager' placeholder={this.state.projectManager} disabled />
                         </div>
                         <div className='col-md-2'>
-                            <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
+                            <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal" onClick={this.componentWillMount}>Search</button>
                             <div className="modal fade" id="myModal" role="dialog">
                                 <div className="modal-dialog">
                                     <div className='modal-content'>
