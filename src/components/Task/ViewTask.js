@@ -37,7 +37,7 @@ class ViewTask extends React.Component {
         this.setState({ details: projectDetails })
         this.setState({ projectName: projectDetails.projectName })
         axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + projectDetails.projectId).then(res => {
-            console.log(res.data )
+            console.log(res.data)
             this.setState({ taskDetails: res.data })
         })
     }
@@ -48,7 +48,15 @@ class ViewTask extends React.Component {
         this.setState({ startDate: startDate });
         this.setState({ endDate: endDate });
         this.setState({ priority: priority });
-        return (<Route path="/AddTask" component={AddTask} />)
+        //     this.setState({ id: id },{ taskName: name },{ startDate: startDate },
+        //      { endDate: endDate },{ priority: priority }, () => {
+            // this.props.history.push('/AddTask'+this.state.id);
+    
+        // return (<Route path="/AddTask" component={AddTask} />)
+        this.props.history.push({
+            pathname: '/AddTask',
+            state: { id: this.state.id }
+        })
     }
 
     renderTask() {

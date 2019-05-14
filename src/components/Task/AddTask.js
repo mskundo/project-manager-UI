@@ -109,8 +109,7 @@ class AddTask extends React.Component {
     e.preventDefault();
     if (this.state.value === false) {
       const parentTask = {
-        taskName: this.state.taskName,
-        user: this.state.userDetail
+        taskName: this.state.taskName
       }
       axios.post("http://localhost:9091/projectmanager/parentTask/save", parentTask)
         .then(res => {
@@ -127,7 +126,6 @@ class AddTask extends React.Component {
         project: this.state.projectDetail,
         parent: this.state.parentTaskDetail
       };
-      console.log(task)
       axios.post("http://localhost:9091/projectmanager/tasks/saveTask", task)
         .then(res => {
           console.log(res.data);
@@ -180,6 +178,7 @@ class AddTask extends React.Component {
     }
 
     return (
+      
       <div className="container-fluid">
         <br />
         <form className="form-group" classID="myForm" onSubmit={this.onSubmit.bind(this)}>
