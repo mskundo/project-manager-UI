@@ -64,6 +64,7 @@ class ViewTask extends React.Component {
             this.state.taskDetails.map(data =>
                 <tr>
                     <td key={data.taskName} className='jumbotron'>{data.taskName}</td>
+                    <td key={data.parentName} className='jumbotron'>{data.parentName}</td>
                     <td key={data.startDate} >{data.startDate}</td>
                     <td key={data.endDate} >{data.endDate}</td>
                     <td key={data.priority}>{data.priority}</td>
@@ -169,6 +170,7 @@ class ViewTask extends React.Component {
                                 <thead>
                                     <tr>
                                         <th className="text-center">TASK NAME</th>
+                                        <th className="text-center">PARENT TASK NAME</th>
                                         <th className="text-center">START DATE</th>
                                         <th className="text-center">END DATE</th>
                                         <th className="text-center">PRIORITY</th>

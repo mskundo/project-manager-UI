@@ -13,7 +13,7 @@ export default class AddProject extends React.Component {
             projectName: '',
             allUsers: [],
             filterKeyword: '',
-            getProjects:[]
+            getProjects: []
         };
     }
 
@@ -69,24 +69,22 @@ export default class AddProject extends React.Component {
         this.setState({ endDate: nxtDate.toISOString().substr(0, 10) })
     }
 
-    changeFilterValue = (e) => {
+    changeFilterValue(e) {
         this.setState({ filterKeyword: e.target.value })
     }
 
-    componentWillMount = () => {
+    componentWillMount() {
         this.setStartEndDates();
         axios.get("http://localhost:9091/projectmanager/user/getAllUsers").then(res => {
-            let usersDetails = res.data;
-            this.setState({ usersDetails })
+            this.setState({ usersDetails: res.data })
         });
-
-        // axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
-        //     console.log(res.data)
-        //     this.setState({ getProjects: res.data })
-        // })
+        axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
+            console.log(res.data)
+            this.setState({ getProjects: res.data })
+        })
     }
 
-    rowClicked = (userDetails) => {
+    rowClicked(userDetails) {
         this.setState({ managerDetails: userDetails })
         let fullName = userDetails.firstName + " " + userDetails.lastName;
         this.setState({ projectManager: fullName })
@@ -122,32 +120,36 @@ export default class AddProject extends React.Component {
 
     getProject() {
         axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
-            console.log(res.data)
+
             this.setState({ getProjects: res.data })
         })
     }
 
     renderProject() {
         return (
-            this.state.getProjects.map(data =>
+            this.state.getProjects.map((data, index) =>
                 <tbody>
-                    <tr>
-                        <td key={data.projectRecord.projectId} className='jumbotron'>{data.projectRecord.projectName}</td>
+                    <tr >
+                        <td className='jumbotron'>Project Name :</td>
+                        <td key={index + data.projectRecord.projectId} className='jumbotron'>{data.projectRecord.projectName}</td>
+                        <td key={index + data.priority} className='jumbotron'>Priority</td>
                         <td>
                             <button type="button" className="btn btn-primary">UPDATE</button>
                         </td>
                     </tr>
                     <tr>
-                        <td key={data.projectRecord.priority} className='jumbotron'>{data.projectRecord.priority}</td>
+                        <td key={index + data.completedTask} className='jumbotron'>Completed:  {data.completedTask}</td>
+                        <td key={index + data.noOfTask} className='jumbotron'>No Of Tasks:  {data.noOfTask}</td>
+                        <td key={index + data.projectRecord.priority} className='jumbotron'>{data.projectRecord.priority}</td>
                         <td>
                             <button type="button" className="btn btn-danger">DELETE</button>
                         </td>
                     </tr>
                     <tr>
-                        <td key={data.completedTask} className='jumbotron'>{data.completedTask}</td>
-                        <td key={data.noOfTask} className='jumbotron'>{data.noOfTask}</td>
+                        <td key={index + data.projectRecord.startDate} className='jumbotron'>Start Date:  {data.projectRecord.startDate}</td>
+                        <td key={index + data.projectRecord.endDate} className='jumbotron'>End Date:  {data.projectRecord.endDate}</td>
                     </tr>
-                    <br />
+                    <tr><td></td></tr>
                 </tbody>
             )
         )
@@ -157,14 +159,14 @@ export default class AddProject extends React.Component {
         let filteredItems;
         if (this.state.usersDetails) {
             filteredItems = this.state.usersDetails.filter(userDetails => userDetails.firstName.toUpperCase().includes(this.state.filterKeyword.toUpperCase()) ||
-            userDetails.empId.toUpperCase().includes(this.state.filterKeyword.toUpperCase()) ).map((userDetails, index) => {
-                return (
-                    <tr data-dismiss='modal' onClick={this.rowClicked.bind(this, userDetails)}>
-                        <td key={index + userDetails.userId}> {userDetails.empId} </td>
-                        <td key={index + userDetails.firstName}> {userDetails.firstName} {userDetails.lastName}</td>
-                    </tr>
-                );
-            });
+                userDetails.empId.includes(this.state.filterKeyword)).map((userDetails, index) => {
+                    return (
+                        <tr data-dismiss='modal' onClick={this.rowClicked.bind(this, userDetails)}>
+                            <td key={index + userDetails.userId}> {userDetails.empId} </td>
+                            <td key={index + userDetails.firstName}> {userDetails.firstName} {userDetails.lastName}</td>
+                        </tr>
+                    );
+                });
         }
 
         return (
@@ -269,15 +271,48 @@ export default class AddProject extends React.Component {
                         </div>
                     </div><br />
                 </form>
+                <hr />
                 <div className="row">
-                        <div className='col-md-2'></div>
-                        <div className='col-md-8'>
-                            <table className="table table-borderless table-condensed">
-                                {this.renderProject()}
-                            </table>
-                        </div>
-                        <div className='col-md-2'></div>
+                    <div className='col-md-2'></div>
+                    <div className='col-md-7'>
+                        <input type='text' className='form-control' placeholder="Search..." />
                     </div>
+                    <div className='col-md-3'></div>
+                </div>
+                <br />
+                <div className="row">
+                    <div className='col-md-2'></div>
+                    <div className='col-sm-2'>
+                        <b>Sort Task By:</b>
+                    </div>
+
+                    <div className='col-sm-1'>
+                        <button type='button' className="btn btn-info btn-sm">Start Date</button>
+                    </div>
+
+                    <div className='col-sm-1'>
+                        <button type='button' className="btn btn-info btn-sm">End Date</button>
+                    </div>
+
+                    <div className='col-sm-1'>
+                        <button type='button' className="btn btn-info btn-sm">Priority</button>
+                    </div>
+
+                    <div className='col-sm-1'>
+                        <button type='button' className="btn btn-info btn-sm">Completed</button>
+                    </div>
+
+                </div>
+                <br />
+                <div className="row">
+                    <div className='col-md-2'></div>
+                    <div className='col-md-8'>
+                        <table className="table table-borderless ">
+                            {this.renderProject()}
+                        </table>
+                    </div>
+                    <div className='col-md-2'></div>
+                </div>
             </div>
         )
     }

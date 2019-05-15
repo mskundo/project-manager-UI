@@ -259,7 +259,7 @@ class AddTask extends React.Component {
               <input type="text" className="form-control" placeholder={this.state.parentTask} disabled={!this.state.value} disabled />
             </div>
             <div className="col-sm-1">
-              <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal2" disabled={!this.state.value} >
+              <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal2" onClick={this.componentWillMount} disabled={!this.state.value} >
                 Search
               </button>
             </div>

@@ -11,7 +11,9 @@ class AddUser extends React.Component {
             addData: [],
             getData: [],
             flag: false,
-            updateId: 0
+            updateId: 0,
+            filteredValue: '',
+            filteredItems: ''
         };
     }
 
@@ -93,31 +95,63 @@ class AddUser extends React.Component {
         })
     }
 
+    sortByFname() {
+        axios.get("http://localhost:9091/projectmanager/user/sortByFirstName").then(res => {
+            this.setState({ getData: res.data });
+        })
+    }
+
+    sortByLname() {
+        axios.get("http://localhost:9091/projectmanager/user/sortByLastName").then(res => {
+            this.setState({ getData: res.data });
+        })
+    }
+
+    sortByEmpId() {
+        axios.get("http://localhost:9091/projectmanager/user/sortByEmpId").then(res => {
+            this.setState({ getData: res.data });
+        })
+    }
+
+    changeFilterValue(e) {
+        this.setState({ filteredValue: e.target.value })
+    }
+
     renderUser() {
         return (
-            this.state.getData.map(data =>
-                <tbody>
-                    <tr>
-                        <td key={data.userId} className='jumbotron'>{data.firstName}</td>
-                        <td>
-                            <button type="button" className="btn btn-primary" onClick={this.updateUser.bind(this, data.userId, data.firstName, data.lastName, data.empId)}>UPDATE</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td key={data.lastName} className='jumbotron'>{data.lastName}</td>
-                        <td>
-                            <button type="button" className="btn btn-danger" onClick={this.deleteUser.bind(this, data.userId)}>DELETE</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td key={data.empId} className='jumbotron'>{data.empId}</td>
-                    </tr><br />
-                </tbody>
-            )
+            this.state.filteredItems
         )
     }
 
     render() {
+        if (this.state.getData) {
+            this.state.filteredItems = this.state.getData.filter(getData => getData.firstName.toUpperCase().includes(this.state.filteredValue.toUpperCase()) ||
+                // getData.empId.includes(this.state.filteredValue) ||
+                getData.lastName.toUpperCase().includes(this.state.filteredValue.toUpperCase())).map((getData, index) => {
+                    return (
+                        <tbody>
+                            <tr>
+                                <td key={getData.userId} className='jumbotron'>{getData.firstName}</td>
+                                <td>
+                                    <button type="button" className="btn btn-primary" onClick={this.updateUser.bind(this, getData.userId, getData.firstName, getData.lastName, getData.empId)}>UPDATE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td key={getData.lastName} className='jumbotron'>{getData.lastName}</td>
+                                <td>
+                                    <button type="button" className="btn btn-danger" onClick={this.deleteUser.bind(this, getData.userId)}>DELETE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td key={getData.empId} className='jumbotron'>{getData.empId}</td>
+                            </tr>
+                            <tr><td></td></tr>
+                        </tbody>
+
+                    );
+                });
+        }
+
         return (
             <div className='container-fluid'><br />
                 <form className='form-group' id="userForm">
@@ -141,7 +175,7 @@ class AddUser extends React.Component {
                             <label>Last Name :</label>
                         </div>
                         <div className='col-md-4'>
-                             {this.state.flag === false ?
+                            {this.state.flag === false ?
                                 <input type='text' className="form-control" name='lastName' value={this.state.lastName}
                                     onChange={this.onLastChange.bind(this)} />
                                 : <input type='text' className="form-control" value={this.state.lastName}
@@ -183,6 +217,30 @@ class AddUser extends React.Component {
                         </div>
                     </div>
                     <hr />
+
+                    <div className="row">
+                        <div className='col-md-2'></div>
+                        <div className='col-sm-3'>
+                            <input type='text' className='form-control' placeholder="Search..." onChange={this.changeFilterValue.bind(this)} />
+                        </div>
+                        <div className='col-sm-2'>
+                            <b>Sort Task By:</b>
+                        </div>
+
+                        <div className='col-sm-1'>
+                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByFname.bind(this)}>First Name</button>
+                        </div>
+
+                        <div className='col-sm-1'>
+                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByLname.bind(this)}>Last Name</button>
+                        </div>
+
+                        <div className='col-sm-1'>
+                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEmpId.bind(this)}>Employee Id</button>
+                        </div>
+
+                    </div>
+                    <br />
                     <div className="row">
                         <div className='col-md-2'></div>
                         <div className='col-md-8'>
