@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios';
+import './addProject.css';
+
 
 export default class AddProject extends React.Component {
     constructor(props) {
@@ -13,7 +15,8 @@ export default class AddProject extends React.Component {
             projectName: '',
             allUsers: [],
             filterKeyword: '',
-            getProjects: []
+            getProjects: [],
+            searchFilter: ''
         };
     }
 
@@ -47,7 +50,8 @@ export default class AddProject extends React.Component {
             filterKeyword: "",
             projectManager: '',
             managerDetails: [],
-            addProject: []
+            addProject: [],
+            filteredValue: ''
         })
     }
 
@@ -73,13 +77,16 @@ export default class AddProject extends React.Component {
         this.setState({ filterKeyword: e.target.value })
     }
 
+    searchFilter(e) {
+        this.setState({ searchFilter: e.target.value })
+    }
+
     componentWillMount() {
         this.setStartEndDates();
         axios.get("http://localhost:9091/projectmanager/user/getAllUsers").then(res => {
             this.setState({ usersDetails: res.data })
         });
         axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
-            console.log(res.data)
             this.setState({ getProjects: res.data })
         })
     }
@@ -120,38 +127,38 @@ export default class AddProject extends React.Component {
 
     getProject() {
         axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
-
             this.setState({ getProjects: res.data })
+        })
+    }
+
+    sortByStartDate() {
+        this.setState({
+            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.startDate - b.projectRecord.firstName))
+        })
+    }
+
+    sortByEndDate() {
+        this.setState({
+            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.endDate - b.projectRecord.endDate))
+        })
+    }
+
+
+    sortByPriority() {
+        this.setState({
+            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.priority - b.projectRecord.priority))
+        })
+    }
+
+    sortByCompleted() {
+        this.setState({
+            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.completedTask - b.completedTask))
         })
     }
 
     renderProject() {
         return (
-            this.state.getProjects.map((data, index) =>
-                <tbody>
-                    <tr >
-                        <td className='jumbotron'>Project Name :</td>
-                        <td key={index + data.projectRecord.projectId} className='jumbotron'>{data.projectRecord.projectName}</td>
-                        <td key={index + data.priority} className='jumbotron'>Priority</td>
-                        <td>
-                            <button type="button" className="btn btn-primary">UPDATE</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td key={index + data.completedTask} className='jumbotron'>Completed:  {data.completedTask}</td>
-                        <td key={index + data.noOfTask} className='jumbotron'>No Of Tasks:  {data.noOfTask}</td>
-                        <td key={index + data.projectRecord.priority} className='jumbotron'>{data.projectRecord.priority}</td>
-                        <td>
-                            <button type="button" className="btn btn-danger">DELETE</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td key={index + data.projectRecord.startDate} className='jumbotron'>Start Date:  {data.projectRecord.startDate}</td>
-                        <td key={index + data.projectRecord.endDate} className='jumbotron'>End Date:  {data.projectRecord.endDate}</td>
-                    </tr>
-                    <tr><td></td></tr>
-                </tbody>
-            )
+            this.state.filteredValue
         )
     }
 
@@ -168,6 +175,39 @@ export default class AddProject extends React.Component {
                     );
                 });
         }
+
+        if (this.state.getProjects) {
+            this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
+                .map((getProjects, index) => {
+                    return (
+                        this.state.getProjects.map((data) =>
+                            <tbody>
+                                <tr >
+                                    <td className='jumbotron'><b>Project Name :</b></td>
+                                    <td key={data.projectRecord.projectId} className='jumbotron'>{data.projectRecord.projectName}</td>
+                                    <td key={data.priority} className='jumbotron'><b>Priority</b></td>
+                                    <td>
+                                        <button type="button" className="btn btn-primary">UPDATE</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td key={data.completedTask} className='jumbotron'><b>Completed:  </b>{data.completedTask}</td>
+                                    <td key={data.noOfTask} className='jumbotron'><b>No Of Tasks:  </b>{data.noOfTask}</td>
+                                    <td key={data.projectRecord.priority} className='jumbotron'>{data.projectRecord.priority}</td>
+                                    <td>
+                                        <button type="button" className="btn btn-danger">DELETE</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td key={data.projectRecord.startDate} className='jumbotron'><b>Start Date: </b> {data.projectRecord.startDate}</td>
+                                    <td key={data.projectRecord.endDate} className='jumbotron'><b>End Date:  </b>{data.projectRecord.endDate}</td>
+                                </tr>
+                                <tr><td></td></tr>
+                            </tbody>
+                        ))
+                });
+        }
+
 
         return (
             <div className='container-fluid'><br />
@@ -275,7 +315,7 @@ export default class AddProject extends React.Component {
                 <div className="row">
                     <div className='col-md-2'></div>
                     <div className='col-md-7'>
-                        <input type='text' className='form-control' placeholder="Search..." />
+                        <input type='text' className='form-control' placeholder="Search..." onChange={this.searchFilter.bind(this)} />
                     </div>
                     <div className='col-md-3'></div>
                 </div>
@@ -283,23 +323,23 @@ export default class AddProject extends React.Component {
                 <div className="row">
                     <div className='col-md-2'></div>
                     <div className='col-sm-2'>
-                        <b>Sort Task By:</b>
+                        <b>Sort Projects By:</b>
                     </div>
 
                     <div className='col-sm-1'>
-                        <button type='button' className="btn btn-info btn-sm">Start Date</button>
+                        <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this)}>Start Date</button>
                     </div>
 
                     <div className='col-sm-1'>
-                        <button type='button' className="btn btn-info btn-sm">End Date</button>
+                        <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this)}>End Date</button>
                     </div>
 
                     <div className='col-sm-1'>
-                        <button type='button' className="btn btn-info btn-sm">Priority</button>
+                        <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this)}>Priority</button>
                     </div>
 
                     <div className='col-sm-1'>
-                        <button type='button' className="btn btn-info btn-sm">Completed</button>
+                        <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this)}>Completed</button>
                     </div>
 
                 </div>

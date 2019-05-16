@@ -96,20 +96,21 @@ class AddUser extends React.Component {
     }
 
     sortByFname() {
-        axios.get("http://localhost:9091/projectmanager/user/sortByFirstName").then(res => {
-            this.setState({ getData: res.data });
+        this.setState({
+            getData: Array.from(this.state.getData).sort((a, b) => a.firstName.localeCompare(b.firstName))
         })
+
     }
 
     sortByLname() {
-        axios.get("http://localhost:9091/projectmanager/user/sortByLastName").then(res => {
-            this.setState({ getData: res.data });
+        this.setState({
+            getData: Array.from(this.state.getData).sort((a, b) => a.lastName.localeCompare(b.lastName))
         })
     }
 
     sortByEmpId() {
-        axios.get("http://localhost:9091/projectmanager/user/sortByEmpId").then(res => {
-            this.setState({ getData: res.data });
+        this.setState({
+            getData: Array.from(this.state.getData).sort((a, b) => (a.empId-b.empId))
         })
     }
 
@@ -131,19 +132,19 @@ class AddUser extends React.Component {
                     return (
                         <tbody>
                             <tr>
-                                <td key={getData.userId} className='jumbotron'>{getData.firstName}</td>
+                                <td key={getData.userId} className='jumbotron'><b>First Name : </b>{getData.firstName}</td>
                                 <td>
                                     <button type="button" className="btn btn-primary" onClick={this.updateUser.bind(this, getData.userId, getData.firstName, getData.lastName, getData.empId)}>UPDATE</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td key={getData.lastName} className='jumbotron'>{getData.lastName}</td>
+                                <td key={getData.lastName} className='jumbotron'><b>Last Name : </b>{getData.lastName}</td>
                                 <td>
                                     <button type="button" className="btn btn-danger" onClick={this.deleteUser.bind(this, getData.userId)}>DELETE</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td key={getData.empId} className='jumbotron'>{getData.empId}</td>
+                                <td key={getData.empId} className='jumbotron'><b>Employee Id : </b>{getData.empId}</td>
                             </tr>
                             <tr><td></td></tr>
                         </tbody>
@@ -224,7 +225,7 @@ class AddUser extends React.Component {
                             <input type='text' className='form-control' placeholder="Search..." onChange={this.changeFilterValue.bind(this)} />
                         </div>
                         <div className='col-sm-2'>
-                            <b>Sort Task By:</b>
+                            <b>Sort Users By:</b>
                         </div>
 
                         <div className='col-sm-1'>

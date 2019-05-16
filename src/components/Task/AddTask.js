@@ -33,6 +33,7 @@ class AddTask extends React.Component {
 
     axios.get("http://localhost:9091/projectmanager/parentTask/getParentTasks")
       .then(res => {
+        console.log(res.data)
         this.setState({ parentTaskDetails: res.data });
       });
 

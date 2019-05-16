@@ -55,7 +55,7 @@ class ViewTask extends React.Component {
         // return (<Route path="/AddTask" component={AddTask} />)
         this.props.history.push({
             pathname: '/AddTask',
-            state: { id: this.state.id }
+            state: { id: 9 }
         })
     }
 
