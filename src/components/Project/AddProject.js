@@ -133,7 +133,7 @@ export default class AddProject extends React.Component {
 
     sortByStartDate() {
         this.setState({
-            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.startDate - b.projectRecord.firstName))
+            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.startDate - b.projectRecord.startDate))
         })
     }
 
@@ -147,6 +147,12 @@ export default class AddProject extends React.Component {
     sortByPriority() {
         this.setState({
             getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.priority - b.projectRecord.priority))
+        })
+    }
+
+    suspendProject(id){
+        axios.put("http://localhost:9091/projectmanager/projects/deleteProject/"+id).then(res=>{
+            this.getProject()
         })
     }
 
@@ -180,31 +186,30 @@ export default class AddProject extends React.Component {
             this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
                 .map((getProjects, index) => {
                     return (
-                        this.state.getProjects.map((data) =>
                             <tbody>
                                 <tr >
                                     <td className='jumbotron'><b>Project Name :</b></td>
-                                    <td key={data.projectRecord.projectId} className='jumbotron'>{data.projectRecord.projectName}</td>
-                                    <td key={data.priority} className='jumbotron'><b>Priority</b></td>
+                                    <td key={getProjects.projectRecord.projectId} className='jumbotron'>{getProjects.projectRecord.projectName}</td>
+                                    <td key={getProjects.priority} className='jumbotron'><b>Priority</b></td>
                                     <td>
                                         <button type="button" className="btn btn-primary">UPDATE</button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td key={data.completedTask} className='jumbotron'><b>Completed:  </b>{data.completedTask}</td>
-                                    <td key={data.noOfTask} className='jumbotron'><b>No Of Tasks:  </b>{data.noOfTask}</td>
-                                    <td key={data.projectRecord.priority} className='jumbotron'>{data.projectRecord.priority}</td>
+                                    <td key={getProjects.completedTask} className='jumbotron'><b>Completed:  </b>{getProjects.completedTask}</td>
+                                    <td key={getProjects.noOfTask} className='jumbotron'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
+                                    <td key={getProjects.projectRecord.priority} className='jumbotron'>{getProjects.projectRecord.priority}</td>
                                     <td>
-                                        <button type="button" className="btn btn-danger">DELETE</button>
+                                        <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this,getProjects.projectRecord.projectId)}>SUSPEND</button>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td key={data.projectRecord.startDate} className='jumbotron'><b>Start Date: </b> {data.projectRecord.startDate}</td>
-                                    <td key={data.projectRecord.endDate} className='jumbotron'><b>End Date:  </b>{data.projectRecord.endDate}</td>
+                                    <td key={getProjects.projectRecord.startDate} className='jumbotron'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
+                                    <td key={getProjects.projectRecord.endDate} className='jumbotron'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
                                 </tr>
                                 <tr><td></td></tr>
                             </tbody>
-                        ))
+                        )
                 });
         }
 
