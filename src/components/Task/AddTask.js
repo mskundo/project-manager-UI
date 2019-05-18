@@ -19,7 +19,7 @@ class AddTask extends React.Component {
       parentTaskDetails: [],
       parentTask: "",
       user: "",
-      status: "",
+      status: "progress",
       usersDetails: []
     };
   }

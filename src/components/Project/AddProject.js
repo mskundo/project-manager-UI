@@ -133,16 +133,22 @@ export default class AddProject extends React.Component {
 
     sortByStartDate() {
         this.setState({
-            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.startDate - b.projectRecord.startDate))
+            getProjects: Array.from(this.state.getProjects).sort((a, b) => {
+                return new Date(a.projectRecord.startDate).getTime() -
+                    new Date(b.projectRecord.startDate).getTime()
+            })
         })
     }
 
     sortByEndDate() {
         this.setState({
-            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.endDate - b.projectRecord.endDate))
+            getProjects: Array.from(this.state.getProjects).sort((a, b) => {
+                return new Date(a.projectRecord.endDate).getTime() -
+                    new Date(b.projectRecord.endDate).getTime()
+            })
         })
-    }
 
+    }
 
     sortByPriority() {
         this.setState({
@@ -150,18 +156,18 @@ export default class AddProject extends React.Component {
         })
     }
 
-    suspendProject(id){
-        axios.put("http://localhost:9091/projectmanager/projects/deleteProject/"+id).then(res=>{
-            this.getProject()
-        })
-    }
-
     sortByCompleted() {
         this.setState({
             getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.completedTask - b.completedTask))
         })
+
     }
 
+    suspendProject(id) {
+        axios.put("http://localhost:9091/projectmanager/projects/deleteProject/" + id).then(res => {
+            this.getProject()
+        })
+    }
     renderProject() {
         return (
             this.state.filteredValue
@@ -186,30 +192,30 @@ export default class AddProject extends React.Component {
             this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
                 .map((getProjects, index) => {
                     return (
-                            <tbody>
-                                <tr >
-                                    <td className='jumbotron'><b>Project Name :</b></td>
-                                    <td key={getProjects.projectRecord.projectId} className='jumbotron'>{getProjects.projectRecord.projectName}</td>
-                                    <td key={getProjects.priority} className='jumbotron'><b>Priority</b></td>
-                                    <td>
-                                        <button type="button" className="btn btn-primary">UPDATE</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td key={getProjects.completedTask} className='jumbotron'><b>Completed:  </b>{getProjects.completedTask}</td>
-                                    <td key={getProjects.noOfTask} className='jumbotron'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
-                                    <td key={getProjects.projectRecord.priority} className='jumbotron'>{getProjects.projectRecord.priority}</td>
-                                    <td>
-                                        <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this,getProjects.projectRecord.projectId)}>SUSPEND</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td key={getProjects.projectRecord.startDate} className='jumbotron'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
-                                    <td key={getProjects.projectRecord.endDate} className='jumbotron'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
-                                </tr>
-                                <tr><td></td></tr>
-                            </tbody>
-                        )
+                        <tbody>
+                            <tr >
+                                <td className='jumbotron'><b>Project Name :</b></td>
+                                <td key={getProjects.projectRecord.projectId} className='jumbotron'>{getProjects.projectRecord.projectName}</td>
+                                <td key={getProjects.priority} className='jumbotron'><b>Priority</b></td>
+                                <td>
+                                    <button type="button" className="btn btn-primary">UPDATE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td key={getProjects.completedTask} className='jumbotron'><b>Completed:  </b>{getProjects.completedTask}</td>
+                                <td key={getProjects.noOfTask} className='jumbotron'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
+                                <td key={getProjects.projectRecord.priority} className='jumbotron'>{getProjects.projectRecord.priority}</td>
+                                <td>
+                                    <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td key={getProjects.projectRecord.startDate} className='jumbotron'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
+                                <td key={getProjects.projectRecord.endDate} className='jumbotron'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
+                            </tr>
+                            <tr><td></td></tr>
+                        </tbody>
+                    )
                 });
         }
 

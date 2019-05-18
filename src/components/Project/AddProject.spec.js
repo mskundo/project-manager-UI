@@ -7,11 +7,11 @@ describe('AddProject', () => {
     beforeEach(() => wrapper = shallow(<AddProject />));
 
     it('should render a <input /> in add project', () => {
-        expect(wrapper.find('input').length).toEqual(8);
+        expect(wrapper.find('input').length).toEqual(9);
     });
 
     it('should render a <div /> in add project', () => {
-        expect(wrapper.find('div').length).toEqual(37);
+        expect(wrapper.find('div').length).toEqual(52);
     });
 
     it('should render a <form /> in add project', () => {
@@ -19,7 +19,7 @@ describe('AddProject', () => {
     });
 
     it('should render a <table /> in add project', () => {
-        expect(wrapper.find('table').length).toEqual(1);
+        expect(wrapper.find('table').length).toEqual(2);
     });
 
     it('should render a <tr /> in add project', () => {
@@ -27,7 +27,7 @@ describe('AddProject', () => {
     });
 
     it('should render a <button /> in add project', () => {
-        expect(wrapper.find('button').length).toEqual(4); 
+        expect(wrapper.find('button').length).toEqual(8); 
     });
 
 });
