@@ -1,7 +1,5 @@
 import React from 'react';
 import axios from 'axios'
-import AddTask from './AddTask'
-import { Route } from "react-router-dom";
 
 class ViewTask extends React.Component {
 
@@ -18,7 +16,8 @@ class ViewTask extends React.Component {
             taskName: '',
             startDate: '',
             endDate: '',
-            priority: 0
+            priority: 0,
+            flag: false
         };
     }
 
@@ -34,11 +33,40 @@ class ViewTask extends React.Component {
 
     rowClicked(projectDetails) {
         this.setState({ details: projectDetails })
-        this.setState({ details: projectDetails })
         this.setState({ projectName: projectDetails.projectName })
         axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + projectDetails.projectId).then(res => {
             this.setState({ taskDetails: res.data })
         })
+    }
+
+    sortByStartDate() {
+        this.setState({
+            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
+                return new Date(a.startDate).getTime() -
+                    new Date(b.startDate).getTime()
+            })
+        })
+    }
+
+    sortByEndDate() {
+        this.setState({
+            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
+                return new Date(a.endDate).getTime() -
+                    new Date(b.endDate).getTime()
+            })
+        })
+    }
+
+    sortByPriority() {
+        this.setState({
+            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => (a.priority - b.priority))
+        })
+    }
+
+    sortByCompleted() {
+        // this.setState({
+        //     taskDetails: Array.from(this.state.taskDetails).sort((a, b) => (a.priority - b.priority))
+        // })
     }
 
     updateTask(id, name, startDate, endDate, priority) {
@@ -53,6 +81,13 @@ class ViewTask extends React.Component {
         })
     }
 
+    completeTask(id) {
+        axios.put("http://localhost:9091/projectmanager/tasks/deleteTask/" + id).then(res => {
+            // this.rowClicked(this.state.projectDetails)
+            this.setState({ flag: true })
+        })
+    }
+
     renderTask() {
         return (
             this.state.taskDetails.map(data =>
@@ -63,15 +98,18 @@ class ViewTask extends React.Component {
                     <td key={data.endDate} >{data.endDate}</td>
                     <td key={data.priority}>{data.priority}</td>
                     <td>
-                        <div className='row'>
+                    {/* {this.state.flag===false? */}
+                        <div className='row'>                     
                             <div className='col-md-4'>
                                 <button type="button" className="btn btn-primary" onClick={this.updateTask.bind(this, data.taskId,
                                     data.taskName, data.startDate, data.endDate, data.priority)}>UPDATE</button>
                             </div>
-                            <div className='col-md-4'>
-                                <button type="button" className="btn btn-danger">SUSPEND</button>
-                            </div>
+                            <div className='col-md-6'>
+                            
+                                <button type="button" className="btn btn-danger" onClick={this.completeTask.bind(this, data.taskId)}>END TASK</button>   
+                            </div>            
                         </div>
+                        {/* : <button type="button" className="btn btn-danger" disabled>COMPLETED TASK</button>} */}
                     </td>
                 </tr>
 
@@ -113,19 +151,19 @@ class ViewTask extends React.Component {
                         </div>
 
                         <div className='col-sm-1'>
-                            <button type='button' className="btn btn-info btn-sm">StartDate</button>
+                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this)}>StartDate</button>
                         </div>
 
                         <div className='col-sm-1'>
-                            <button type='button' className="btn btn-info btn-sm">End Date</button>
+                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this)}>End Date</button>
                         </div>
 
                         <div className='col-sm-1'>
-                            <button type='button' className="btn btn-info btn-sm">Priority</button>
+                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this)}>Priority</button>
                         </div>
 
                         <div className='col-sm-1'>
-                            <button type='button' className="btn btn-info btn-sm">Completed</button>
+                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this)}>Completed</button>
                         </div>
 
                     </div>

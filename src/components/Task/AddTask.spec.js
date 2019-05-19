@@ -1,20 +1,20 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import AddTask from './AddTask';
+import Task from './Task';
 
-describe('AddTask', () => {
+describe('Task', () => {
   let wrapper;
-  beforeEach(() => wrapper = shallow(<AddTask />));
+  beforeEach(() => wrapper = shallow(<Task />));
 
-  it('should render a <input /> in add Task', () => {
+  it('should render a <input /> in Task', () => {
     expect(wrapper.find('input').length).toEqual(11);
   });
 
-  it('should render a <div /> in add Task', () => {
+  it('should render a <div /> in Task', () => {
     expect(wrapper.find('div').length).toEqual(53);
   });
 
-  it('should render a <button /> in add Task', () => {
+  it('should render a <button /> in Task', () => {
     expect(wrapper.find('button').length).toEqual(11);
   });
 
