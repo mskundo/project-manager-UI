@@ -7,10 +7,9 @@ class Task extends React.Component {
     super(props);
     this.state = {
       startDate: new Date(),
-      currentDate: "",
       endDate: new Date().setDate(new Date().getDate() + 1),
-      priority: "0",
-      taskName: "",
+      priority: this.props.update ? this.props.priority : "0",
+      taskName: this.props.taskName,
       value: true,
       filterKeyword: "",
       filterKeyword2: "",
@@ -18,10 +17,13 @@ class Task extends React.Component {
       projectDetails: [],
       project: "",
       parentTaskDetails: [],
-      parentTask: "",
+      parentTask: this.props.parentTaskName,
       user: "",
-      status: "progress",
-      usersDetails: []
+      status: "",
+      usersDetails: [],
+      projectId: '',
+      userId: '',
+      parentTaskId: ''
     };
   }
 
@@ -34,7 +36,6 @@ class Task extends React.Component {
 
     axios.get("http://localhost:9091/projectmanager/parentTask/getParentTasks")
       .then(res => {
-        console.log(res.data)
         this.setState({ parentTaskDetails: res.data });
       });
 
@@ -54,17 +55,17 @@ class Task extends React.Component {
   };
 
   rowClicked(projectDetails) {
-    this.setState({ projectDetail: projectDetails })
+    this.setState({ projectId: projectDetails.projectId })
     this.setState({ project: projectDetails.projectName });
   };
 
   rowClicked2(parentTaskDetails) {
-    this.setState({ parentTaskDetail: parentTaskDetails })
+    this.setState({ parentTaskId: parentTaskDetails.parentId })
     this.setState({ parentTask: parentTaskDetails.parentTaskName });
   };
 
   rowClicked3(userDetails) {
-    this.setState({ userDetail: userDetails })
+    this.setState({ userId: userDetails.userId })
     let fullName = userDetails.firstName + " " + userDetails.lastName;
     this.setState({ user: fullName });
   };
@@ -119,14 +120,14 @@ class Task extends React.Component {
         });
     } else {
       const task = {
-        user: this.state.userDetail,
+        userId: this.state.userId,
         taskName: this.state.taskName,
         startDate: this.state.startDate,
         endDate: this.state.endDate,
         priority: this.state.priority,
         status: this.state.status,
-        project: this.state.projectDetail,
-        parent: this.state.parentTaskDetail
+        projectId: this.state.projectId,
+        parentTaskId: this.state.parentTaskId
       };
       axios.post("http://localhost:9091/projectmanager/tasks/saveTask", task)
         .then(res => {
@@ -134,6 +135,11 @@ class Task extends React.Component {
         });
     }
   }
+
+  onUpdate() {
+
+  }
+
 
   render() {
     let filteredItems;
@@ -180,13 +186,12 @@ class Task extends React.Component {
     }
 
     return (
-
       <div className="container-fluid">
         <br />
         <div className='row'>
           <div className='col-md-2'></div>
           <div className='col-md-8'>
-            <form className="form-group card" classID="myForm" onSubmit={this.onSubmit.bind(this)}><br />
+            <form className="form-group card" classID="myForm"><br />
               <div className="row">
                 <div className="col-md-2">
                   <label>Project:</label>
@@ -293,22 +298,42 @@ class Task extends React.Component {
                 </div>
               </div>
               <br />
-              <div className="row">
-                <div className="col-sm-2">
-                  <label>Start Date :</label>
+              {this.props.update ?
+                <div className="row">
+                  <div className="col-sm-2">
+                    <label>Start Date :</label>
+                  </div>
+                  <div className="col-sm-3">
+                    <input type="Date" className="form-control" defaultValue={this.props.startDate} onChange={this.handleChangeStartDate.bind(this)}
+                      disabled={!this.state.value} />
+                  </div>
+                  <div className="col-sm-2">
+                    <label>End Date:</label>
+                  </div>
+                  <div className="col-sm-3">
+                    <input type="Date" min={this.state.startDate} defaultValue={this.props.endDate} onChange={this.handleChangeEndDate.bind(this)}
+                      className="form-control" disabled={!this.state.value} />
+                  </div>
                 </div>
-                <div className="col-sm-3">
-                  <input type="Date" className="form-control" defaultValue={this.state.startDate} onChange={this.handleChangeStartDate.bind(this)}
-                    disabled={!this.state.value} />
+                :
+                <div className="row">
+                  <div className="col-sm-2">
+                    <label>Start Date :</label>
+                  </div>
+                  <div className="col-sm-3">
+                    <input type="Date" className="form-control" defaultValue={this.state.startDate} onChange={this.handleChangeStartDate.bind(this)}
+                      disabled={!this.state.value} />
+                  </div>
+                  <div className="col-sm-2">
+                    <label>End Date:</label>
+                  </div>
+                  <div className="col-sm-3">
+                    <input type="Date" min={this.state.startDate} defaultValue={this.state.endDate} onChange={this.handleChangeEndDate.bind(this)}
+                      className="form-control" disabled={!this.state.value} />
+                  </div>
                 </div>
-                <div className="col-sm-2">
-                  <label>End Date:</label>
-                </div>
-                <div className="col-sm-3">
-                  <input type="Date" min={this.state.startDate} defaultValue={this.state.endDate} onChange={this.handleChangeEndDate.bind(this)}
-                    className="form-control" disabled={!this.state.value} />
-                </div>
-              </div>
+              }
+
               <br />
               <div className="row">
                 <div className="col-sm-2">
@@ -350,7 +375,10 @@ class Task extends React.Component {
               <div className="row">
                 <div className="col-md-8"></div>
                 <div className="col-md-2">
-                  <button type="submit" className="btn btn-secondary">Add Task</button>
+                  {this.props.update ?
+                    <button type="submit" className="btn btn-secondary" onClick={this.onUpdate.bind(this)}>Update Task</button> :
+                    <button type="submit" className="btn btn-secondary" onClick={this.onSubmit.bind(this)}>Add Task</button>
+                  }
                 </div>
                 <div className="col-md-1">
                   <button type="button" className="btn btn-secondary">Cancel</button>
