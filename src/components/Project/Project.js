@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios';
 import './addProject.css';
 
-
 export default class Project extends React.Component {
     constructor(props) {
         super(props);
@@ -18,9 +17,9 @@ export default class Project extends React.Component {
             searchFilter: '',
             id: '',
             userId: '',
-            userName:'',
+            userName: '',
             flag: false,
-            projectManager:''
+            projectManager: ''
         };
     }
 
@@ -92,7 +91,6 @@ export default class Project extends React.Component {
             this.setState({ usersDetails: res.data })
         });
         axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
-            console.log(res.data)
             this.setState({ getProjects: res.data })
         })
     }
@@ -100,7 +98,7 @@ export default class Project extends React.Component {
     rowClicked(userDetails) {
         this.setState({ userId: userDetails.userId })
         let fullName = userDetails.firstName + " " + userDetails.lastName;
-        this.setState({ projectManager: fullName })
+        this.setState({ userName: fullName })
     }
 
     onSubmit(e) {
@@ -133,7 +131,6 @@ export default class Project extends React.Component {
 
     getProject() {
         axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
-            console.log(res.data)
             this.setState({ getProjects: res.data })
         })
     }
@@ -154,21 +151,24 @@ export default class Project extends React.Component {
                     new Date(b.projectRecord.endDate).getTime()
             })
         })
-
     }
+
 
     sortByPriority() {
         this.setState({
             getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.priority - b.projectRecord.priority))
+
         })
+        console.log(this.state.getProjects)
+
     }
 
     sortByCompleted() {
         this.setState({
             getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.completedTask - b.completedTask))
         })
-
     }
+
 
     suspendProject(id) {
         axios.put("http://localhost:9091/projectmanager/projects/deleteProject/" + id).then(res => {
@@ -177,7 +177,6 @@ export default class Project extends React.Component {
     }
 
     updateProject(id, name, priority, startDate, endDate, userId, userName) {
-        console.log(userId)
         this.setState({ flag: true })
         this.setState({ id: id })
         this.setState({ projectName: name })
@@ -185,7 +184,7 @@ export default class Project extends React.Component {
         this.setState({ startDate: startDate })
         this.setState({ endDate: endDate })
         this.setState({ userId: userId })
-        this.setState({userName:userName})
+        this.setState({ userName: userName })
     }
 
     onUpdate(e) {
@@ -197,8 +196,7 @@ export default class Project extends React.Component {
             endDate: this.state.endDate,
             priority: this.state.priority
         }
-        console.log(project)
-        axios.put("http://localhost:9091/projectmanager/projects/updateProject/"+this.state.id, project).then(res => {
+        axios.put("http://localhost:9091/projectmanager/projects/updateProject/" + this.state.id, project).then(res => {
             this.getProject()
         })
 
@@ -228,31 +226,33 @@ export default class Project extends React.Component {
             this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
                 .map((getProjects, index) => {
                     return (
-                        <tbody>
-                            <tr >
-                                <td className='jumbotron'><b>Project Name :</b></td>
-                                <td key={getProjects.projectRecord.projectId} className='jumbotron'>{getProjects.projectRecord.projectName}</td>
-                                <td key={getProjects.priority} className='jumbotron'><b>Priority</b></td>
-                                <td>
-                                    <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
-                                        getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
-                                        getProjects.projectRecord.userId,getProjects.projectRecord.userName)}>UPDATE</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td key={getProjects.completedTask} className='jumbotron'><b>Completed:  </b>{getProjects.completedTask}</td>
-                                <td key={getProjects.noOfTask} className='jumbotron'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
-                                <td key={getProjects.projectRecord.priority} className='jumbotron'>{getProjects.projectRecord.priority}</td>
-                                <td>
-                                    <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td key={getProjects.projectRecord.startDate} className='jumbotron'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
-                                <td key={getProjects.projectRecord.endDate} className='jumbotron'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
-                            </tr>
-                            <tr><td></td><hr></hr><td><hr></hr></td></tr>
-                        </tbody>
+                        <div>
+                            <tbody>
+                                <tr>
+                                    <td className='table-style'><b>Project Name :</b></td>
+                                    <td key={getProjects.projectRecord.projectId} className='table-style'>{getProjects.projectRecord.projectName}</td>
+                                    <td key={getProjects.priority} className=''><b>Priority</b></td>
+                                    <td>
+                                        <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
+                                            getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
+                                            getProjects.projectRecord.userId, getProjects.projectRecord.userName)}>UPDATE</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td key={getProjects.completedTask + 1} className='table-style'><b>Completed:  </b>{getProjects.completedTask}</td>
+                                    <td key={getProjects.noOfTask} className='table-style'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
+                                    <td key={getProjects.projectRecord.priority} className='table-style'>{getProjects.projectRecord.priority}</td>
+                                    <td>
+                                        <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td key={getProjects.projectRecord.startDate} className='table-style'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
+                                    <td key={getProjects.projectRecord.endDate} className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
+                                    <td className='table-style'></td>
+                                </tr>
+                            </tbody><br /><hr />
+                        </div>
                     )
                 });
         }
@@ -260,151 +260,149 @@ export default class Project extends React.Component {
         return (
             <div className='container-fluid'><br />
                 <div className='row'>
-                <div className='col-md-2'></div>
-                <div className='col-md-8'>
-                    <form className='form-group card' classID='myForm'><br/>
-                        <div className='row'>
-                            <div className='col-md-3'>
-                                <label>Project :</label>
-                            </div>
-                            <div className='col-md-8'>
-                                <input type='text' className="form-control" name='projectName' value={this.state.projectName}
-                                    onChange={this.onProjectChange.bind(this)} />
-                            </div>
-                            <div className='col-md-1'></div>
-                        </div><br />
-                        <div></div>
-                        <div className='row'>
-                            <div className='col-md-1'></div>
-                            <div className='col-md-3'>
-                                <div className='row'>
-                                    <div className='col-md-3'>
-                                        <input type='checkbox' value="" onChange={this.checkBox.bind(this)} />
-                                    </div>
-                                    <div className='col-md-9'>
-                                        Set Start Date and End Date
-                                </div>
-                                </div>
-                            </div>
-                            <div className='col-md-7'>
-                                <div className='row'>
-                                    <div className='col-md-6'>
-                                        <input type="date" value={this.state.startDate} disabled={this.state.value} onChange={this.handleChangeStartDate.bind(this)} />
-                                    </div>
-                                    <div className='col-md-6'>
-                                        <input type="date" min={this.state.startDate} value={this.state.endDate} disabled={this.state.value} onChange={this.handleChangeEndDate.bind(this)} />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-1'></div>
-                        </div><br />
-
-                        <div className='row'>
-                            <div className='col-md-3'>
-                                <label>Priority</label>
-                            </div>
-                            <div className='col-md-8'>
-                                <input type="range" className="custom-range" id="tickmarks" min="0" max="30" value={this.state.priority}
-                                    onChange={this.onPriority.bind(this)} />
-                            </div>
-                            <div className='col-md-1'></div>
-                        </div><br />
-
-                        <div className='row'>
-                            <div className='col-md-3'>
-                                <label>Manager :</label>
-                            </div>
-                            <div className='col-md-6'>
-                       
-                                    <input type='text' className="form-control" name='manager' value={this.state.userName}  disabled /> :
-                                    
-                            </div>
-                            <div className='col-md-2'>
-                                <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
-                                <div className="modal fade" id="myModal" role="dialog">
-                                    <div className="modal-dialog">
-                                        <div className='modal-content'>
-                                            <div className='modal-header'>
-                                                <h5 className='modal-title'>Search Manager</h5>
-                                                <button type='button' className='close' data-dismiss='modal'>&times;</button>
-                                            </div>
-                                            <div className='modal-body'>
-                                                <input type='text' placeholder='search..' className='form-control' onChange={this.changeFilterValue.bind(this)} />
-                                                <table className="table table-borderless table-condensed table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th className="text-center">ID</th>
-                                                            <th className="text-center">NAME</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {filteredItems}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div className='modal-footer'>
-                                                <button type='button' className='btn btn-default' data-dismiss='modal'>Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><br /><br /><br />
+                    <div className='col-md-2'></div>
+                    <div className='col-md-8'>
+                        <form className='form-group card' classID='myForm'><br />
                             <div className='row'>
-                                <div className='col-md-4'></div>
+                                <div className='col-md-3'>
+                                    <label>Project :</label>
+                                </div>
                                 <div className='col-md-8'>
+                                    <input type='text' className="form-control" name='projectName' value={this.state.projectName}
+                                        onChange={this.onProjectChange.bind(this)} />
+                                </div>
+                                <div className='col-md-1'></div>
+                            </div><br />
+                            <div></div>
+                            <div className='row'>
+                                <div className='col-md-1'></div>
+                                <div className='col-md-3'>
+                                    <div className='row'>
+                                        <div className='col-md-3'>
+                                            <input type='checkbox' value="" onChange={this.checkBox.bind(this)} />
+                                        </div>
+                                        <div className='col-md-9'>
+                                            Set Start Date and End Date
+                                </div>
+                                    </div>
+                                </div>
+                                <div className='col-md-7'>
                                     <div className='row'>
                                         <div className='col-md-6'>
-                                            {this.state.flag === false ?
-                                                <button type='submit' className='btn btn-secondary' onClick={this.onSubmit.bind(this)}>Add</button> :
-                                                <button type='submit' className='btn btn-secondary' onClick={this.onUpdate.bind(this)}>Update</button>
-                                            }
+                                            <input type="date" value={this.state.startDate} disabled={this.state.value} onChange={this.handleChangeStartDate.bind(this)} />
                                         </div>
                                         <div className='col-md-6'>
-                                            <input type='button' className='btn btn-secondary' onClick={this.cancelCourse.bind(this)} value="Reset" />
+                                            <input type="date" min={this.state.startDate} value={this.state.endDate} disabled={this.state.value} onChange={this.handleChangeEndDate.bind(this)} />
                                         </div>
                                     </div>
                                 </div>
+                                <div className='col-md-1'></div>
+                            </div><br />
+
+                            <div className='row'>
+                                <div className='col-md-3'>
+                                    <label>Priority</label>
+                                </div>
+                                <div className='col-md-8'>
+                                    <input type="range" className="custom-range" id="tickmarks" min="0" max="30" value={this.state.priority}
+                                        onChange={this.onPriority.bind(this)} />
+                                </div>
+                                <div className='col-md-1'></div>
+                            </div><br />
+
+                            <div className='row'>
+                                <div className='col-md-3'>
+                                    <label>Manager :</label>
+                                </div>
+                                <div className='col-md-6'>
+                                    <input type='text' className="form-control" name='manager' value={this.state.userName} disabled />
+                                </div>
+                                <div className='col-md-2'>
+                                    <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
+                                    <div className="modal fade" id="myModal" role="dialog">
+                                        <div className="modal-dialog">
+                                            <div className='modal-content'>
+                                                <div className='modal-header'>
+                                                    <h5 className='modal-title'>Search Manager</h5>
+                                                    <button type='button' className='close' data-dismiss='modal'>&times;</button>
+                                                </div>
+                                                <div className='modal-body'>
+                                                    <input type='text' placeholder='search..' className='form-control' onChange={this.changeFilterValue.bind(this)} />
+                                                    <table className="table table-borderless table-condensed table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th className="text-center">ID</th>
+                                                                <th className="text-center">NAME</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {filteredItems}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div className='modal-footer'>
+                                                    <button type='button' className='btn btn-default' data-dismiss='modal'>Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><br /><br /><br />
+                                <div className='row'>
+                                    <div className='col-md-4'></div>
+                                    <div className='col-md-8'>
+                                        <div className='row'>
+                                            <div className='col-md-6'>
+                                                {this.state.flag === false ?
+                                                    <button type='submit' className='btn btn-secondary' onClick={this.onSubmit.bind(this)}>Add</button> :
+                                                    <button type='submit' className='btn btn-secondary' onClick={this.onUpdate.bind(this)}>Update</button>
+                                                }
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <input type='button' className='btn btn-secondary' onClick={this.cancelCourse.bind(this)} value="Reset" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br />
+                        </form>
+                        <hr className='project-line' />
+                        <div className="row">
+                            <div className='col-md-12'>
+                                <input type='text' className='form-control' placeholder="Search..." onChange={this.searchFilter.bind(this)} />
                             </div>
-                        </div><br />
-                    </form>              
-                    <hr className='project-line'/>
-                    <div className="row">
-                        <div className='col-md-12'>
-                            <input type='text' className='form-control' placeholder="Search..." onChange={this.searchFilter.bind(this)} />
+                        </div>
+                        <br />
+                        <div className="row">
+                            <div className='col-sm-3'>
+                                <b>Sort Projects By:</b>
+                            </div>
+
+                            <div className='col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this)}>Start Date</button>
+                            </div>
+
+                            <div className='col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this)}>End Date</button>
+                            </div>
+
+                            <div className='col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this)}>Priority</button>
+                            </div>
+
+                            <div className='col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this)}>Completed</button>
+                            </div>
+
+                        </div>
+                        <br />
+                        <div className="row">
+                            <div className='col-md-12'>
+                                <table className="table table-borderless">
+                                    {this.renderProject()}
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <br />
-                    <div className="row">
-                        <div className='col-sm-3'>
-                            <b>Sort Projects By:</b>
-                        </div>
-
-                        <div className='col-sm-2'>
-                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this)}>Start Date</button>
-                        </div>
-
-                        <div className='col-sm-2'>
-                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this)}>End Date</button>
-                        </div>
-
-                        <div className='col-sm-2'>
-                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this)}>Priority</button>
-                        </div>
-
-                        <div className='col-sm-2'>
-                            <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this)}>Completed</button>
-                        </div>
-
-                    </div>
-                    <br />
-                    <div className="row">
-                        <div className='col-md-12'>
-                            <table className="table table-borderless ">
-                                {this.renderProject()}
-                            </table>
-                        </div>
-                    </div>
-                </div>
                 </div>
                 <div className='row-md-2'></div>
             </div>

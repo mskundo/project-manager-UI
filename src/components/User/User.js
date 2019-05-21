@@ -161,25 +161,21 @@ class User extends React.Component {
                 // getData.empId.indexOf(this.state.filteredValue) ||
                 getData.lastName.toUpperCase().includes(this.state.filteredValue.toUpperCase())).map((getData, index) => {
                     return (
-                        <tbody>
-                            <tr>
-                                <td key={getData.userId} className='jumbotron'><b>First Name : </b>{getData.firstName}</td>
-                                <td>
+                        <div>
+                            <div class='row'>
+                                <div className='col-md-9'>
+                                    <input type='text' key={getData.userId} className='form-control' value={getData.firstName} readOnly />
+                                    <input type='text' key={getData.lastName} className='form-control' value={getData.lastName} readOnly />
+                                    <input type='text'  key={getData.empId} className='form-control' value={getData.empId} readOnly />
+                                </div>
+                                <div className='col-md-3'>
                                     <button type="button" className="btn btn-primary" onClick={this.updateUser.bind(this, getData.userId, getData.firstName, getData.lastName, getData.empId)}>UPDATE</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td key={getData.lastName} className='jumbotron'><b>Last Name : </b>{getData.lastName}</td>
-                                <td>
                                     <button type="button" className="btn btn-danger" onClick={this.deleteUser.bind(this, getData.userId)}>DELETE</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td key={getData.empId} className='jumbotron'><b>Employee Id : </b>{getData.empId}</td>
-                            </tr>
-                            <tr><td></td></tr>
+                                </div>
+                            </div>
+
                             <hr className='table-line'></hr>
-                        </tbody>
+                        </div>
                     );
                 });
         }
@@ -215,7 +211,7 @@ class User extends React.Component {
                                     <label>Employee ID :</label>
                                 </div>
                                 <div className='col-md-4'>
-                                    <input type='text' className="form-control" name='lastName' value={this.state.empId}
+                                    <input type='text'  minLength='6' maxLength='6' className="form-control" name='lastName' value={this.state.empId}
                                         onChange={this.onEmpId.bind(this)} />
                                 </div>
                                 <div className='col-md-5'></div>
@@ -264,11 +260,8 @@ class User extends React.Component {
                         </div>
                         <br />
                         <div className="row">
-                            <div className='col-md-1'></div>
-                            <div className='col-md-11'>
-                                <table className="table table-borderless table-condensed">
-                                    {this.renderUser()}
-                                </table>
+                            <div className='col-md-12'>
+                                {this.renderUser()}
                             </div>
                         </div>
                     </div>
