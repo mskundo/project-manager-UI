@@ -18,7 +18,9 @@ export default class Project extends React.Component {
             searchFilter: '',
             id: '',
             userId: '',
-            flag: false
+            userName:'',
+            flag: false,
+            projectManager:''
         };
     }
 
@@ -96,7 +98,7 @@ export default class Project extends React.Component {
     }
 
     rowClicked(userDetails) {
-        this.setState({ managerDetails: userDetails })
+        this.setState({ userId: userDetails.userId })
         let fullName = userDetails.firstName + " " + userDetails.lastName;
         this.setState({ projectManager: fullName })
     }
@@ -104,7 +106,7 @@ export default class Project extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         const project = {
-            user: this.state.managerDetails,
+            userId: this.state.userId,
             projectName: this.state.projectName,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
@@ -131,6 +133,7 @@ export default class Project extends React.Component {
 
     getProject() {
         axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
+            console.log(res.data)
             this.setState({ getProjects: res.data })
         })
     }
@@ -173,7 +176,8 @@ export default class Project extends React.Component {
         })
     }
 
-    updateProject(id, name, priority, startDate, endDate, userId) {
+    updateProject(id, name, priority, startDate, endDate, userId, userName) {
+        console.log(userId)
         this.setState({ flag: true })
         this.setState({ id: id })
         this.setState({ projectName: name })
@@ -181,9 +185,22 @@ export default class Project extends React.Component {
         this.setState({ startDate: startDate })
         this.setState({ endDate: endDate })
         this.setState({ userId: userId })
+        this.setState({userName:userName})
     }
 
-    onUpdate() {
+    onUpdate(e) {
+        e.preventDefault();
+        const project = {
+            userId: this.state.userId,
+            projectName: this.state.projectName,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate,
+            priority: this.state.priority
+        }
+        console.log(project)
+        axios.put("http://localhost:9091/projectmanager/projects/updateProject/"+this.state.id, project).then(res => {
+            this.getProject()
+        })
 
     }
 
@@ -219,7 +236,7 @@ export default class Project extends React.Component {
                                 <td>
                                     <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
                                         getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
-                                        getProjects.projectRecord.userId)}>UPDATE</button>
+                                        getProjects.projectRecord.userId,getProjects.projectRecord.userName)}>UPDATE</button>
                                 </td>
                             </tr>
                             <tr>
@@ -298,10 +315,9 @@ export default class Project extends React.Component {
                                 <label>Manager :</label>
                             </div>
                             <div className='col-md-6'>
-                                {this.state.false === false ?
-                                    <input type='text' className="form-control" name='manager' placeholder={this.state.projectManager} disabled /> :
-                                    <input type='text' className="form-control" name='manager' placeholder={this.state.userId} disabled />
-                                }
+                       
+                                    <input type='text' className="form-control" name='manager' value={this.state.userName}  disabled /> :
+                                    
                             </div>
                             <div className='col-md-2'>
                                 <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
@@ -353,15 +369,12 @@ export default class Project extends React.Component {
                     </form>              
                     <hr className='project-line'/>
                     <div className="row">
-                        {/* <div className='col-md-1'></div> */}
                         <div className='col-md-12'>
                             <input type='text' className='form-control' placeholder="Search..." onChange={this.searchFilter.bind(this)} />
                         </div>
-                        {/* <div className='col-md-1'></div> */}
                     </div>
                     <br />
                     <div className="row">
-                        {/* <div className='col-md-2'></div> */}
                         <div className='col-sm-3'>
                             <b>Sort Projects By:</b>
                         </div>
@@ -385,13 +398,11 @@ export default class Project extends React.Component {
                     </div>
                     <br />
                     <div className="row">
-                        {/* <div className='col-md-2'></div> */}
                         <div className='col-md-12'>
                             <table className="table table-borderless ">
                                 {this.renderProject()}
                             </table>
                         </div>
-                        {/* <div className='col-md-2'></div> */}
                     </div>
                 </div>
                 </div>

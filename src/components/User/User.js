@@ -14,7 +14,8 @@ class User extends React.Component {
             flag: false,
             updateId: 0,
             filteredValue: '',
-            filteredItems: ''
+            filteredItems: '',
+            sort: 0
         };
     }
 
@@ -96,22 +97,52 @@ class User extends React.Component {
         })
     }
 
-    sortByFname() {
-        this.setState({
-            getData: Array.from(this.state.getData).sort((a, b) => a.firstName.localeCompare(b.firstName))
-        })
+    sortByFname(count) {
+        if (count === 0) {
+            this.setState({
+                getData: Array.from(this.state.getData).sort((a, b) => a.firstName.localeCompare(b.firstName))
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                getData: Array.from(this.state.getData).sort((a, b) => b.firstName.localeCompare(a.firstName))
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
-    sortByLname() {
-        this.setState({
-            getData: Array.from(this.state.getData).sort((a, b) => a.lastName.localeCompare(b.lastName))
-        })
+    sortByLname(count) {
+        if (count === 0) {
+            this.setState({
+                getData: Array.from(this.state.getData).sort((a, b) => a.lastName.localeCompare(b.lastName))
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                getData: Array.from(this.state.getData).sort((a, b) => b.lastName.localeCompare(a.lastName))
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
-    sortByEmpId() {
-        this.setState({
-            getData: Array.from(this.state.getData).sort((a, b) => (a.empId - b.empId))
-        })
+    sortByEmpId(count) {
+        if (count === 0) {
+            this.setState({
+                getData: Array.from(this.state.getData).sort((a, b) => (a.empId - b.empId))
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                getData: Array.from(this.state.getData).sort((a, b) => (b.empId - a.empId))
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
     changeFilterValue(e) {
@@ -164,11 +195,8 @@ class User extends React.Component {
                                     <label>First Name :</label>
                                 </div>
                                 <div className='col-md-8'>
-                                    {this.state.flag === false ?
-                                        <input type='text' className="form-control" name='firstName' value={this.state.firstName}
-                                            onChange={this.onFirstChange.bind(this)} />
-                                        : <input type='text' className="form-control" value={this.state.firstName} onChange={this.onFirstChange.bind(this)} />
-                                    }
+                                    <input type='text' className="form-control" name='firstName' value={this.state.firstName}
+                                        onChange={this.onFirstChange.bind(this)} />
                                 </div>
                                 <div className='col-md-1'></div>
                             </div> <br />
@@ -177,12 +205,8 @@ class User extends React.Component {
                                     <label>Last Name :</label>
                                 </div>
                                 <div className='col-md-8'>
-                                    {this.state.flag === false ?
-                                        <input type='text' className="form-control" name='lastName' value={this.state.lastName}
-                                            onChange={this.onLastChange.bind(this)} />
-                                        : <input type='text' className="form-control" value={this.state.lastName}
-                                            onChange={this.onLastChange.bind(this)} />
-                                    }
+                                    <input type='text' className="form-control" name='lastName' value={this.state.lastName}
+                                        onChange={this.onLastChange.bind(this)} />
                                 </div>
                                 <div className='col-md-1'></div>
                             </div> <br />
@@ -191,11 +215,8 @@ class User extends React.Component {
                                     <label>Employee ID :</label>
                                 </div>
                                 <div className='col-md-4'>
-                                    {this.state.flag === false ?
-                                        <input type='text' className="form-control" name='lastName' value={this.state.empId}
-                                            onChange={this.onEmpId.bind(this)} />
-                                        : <input type='text' className="form-control" value={this.state.empId} onChange={this.onEmpId.bind(this)} />
-                                    }
+                                    <input type='text' className="form-control" name='lastName' value={this.state.empId}
+                                        onChange={this.onEmpId.bind(this)} />
                                 </div>
                                 <div className='col-md-5'></div>
                             </div>
@@ -229,15 +250,15 @@ class User extends React.Component {
                             </div>
 
                             <div className='col-md-1'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByFname.bind(this)}>First Name</button>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByFname.bind(this, this.state.sort)}>First Name</button>
                             </div>
 
                             <div className='col-md-1'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByLname.bind(this)}>Last Name</button>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByLname.bind(this, this.state.sort)}>Last Name</button>
                             </div>
 
                             <div className='col-md-1'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEmpId.bind(this)}>Employee Id</button>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEmpId.bind(this, this.state.sort)}>Employee Id</button>
                             </div>
 
                         </div>

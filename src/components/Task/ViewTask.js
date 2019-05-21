@@ -20,11 +20,11 @@ class ViewTask extends React.Component {
             priority: 0,
             flag: false,
             goToUpdate: 0,
-            userId:'',
-            userName:'',
-            parentId:'',
-            parentName:'',
-            projectId:'',
+            userId: '',
+            userName: '',
+            parentId: '',
+            parentName: '',
+            projectId: '',
         };
     }
 
@@ -41,6 +41,7 @@ class ViewTask extends React.Component {
     rowClicked(projectDetails) {
         this.setState({ details: projectDetails })
         this.setState({ projectName: projectDetails.projectName })
+        this.setState({ projectId: projectDetails.projectId });
         axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + projectDetails.projectId).then(res => {
             console.log(res.data)
             this.setState({ taskDetails: res.data })
@@ -72,12 +73,12 @@ class ViewTask extends React.Component {
     }
 
     sortByCompleted() {
-        // this.setState({
-        //     taskDetails: Array.from(this.state.taskDetails).sort((a, b) => (a.priority - b.priority))
-        // })
+        this.setState({
+            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => b.status.localeCompare(a.status))
+        })
     }
 
-    updateTask(id, name, startDate, endDate, priority, projectId, projectName, parentId,parentName,userId,userName) {
+    updateTask(id, name, startDate, endDate, priority, projectId, projectName, parentId, parentName, userId, userName) {
         this.setState({ id: id });
         this.setState({ taskName: name });
         this.setState({ startDate: startDate });
@@ -90,13 +91,14 @@ class ViewTask extends React.Component {
         this.setState({ parentName: parentName });
         this.setState({ userId: userId });
         this.setState({ goToUpdate: 1 })
+
     }
 
     completeTask(id) {
         axios.put("http://localhost:9091/projectmanager/tasks/deleteTask/" + id).then(res => {
-            // this.rowClicked(this.state.projectDetails)
-            this.setState({ id: id })
-            this.setState({ flag: true })
+            axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + this.state.projectId).then(res => {
+                this.setState({ taskDetails: res.data })
+            })
         })
     }
 
@@ -110,19 +112,19 @@ class ViewTask extends React.Component {
                     <td key={data.endDate} >{data.endDate}</td>
                     <td key={data.priority}>{data.priority}</td>
                     <td>
-                        {/* {this.state.flag===false && this.state.id===data.taskId ? */}
-                        <div className='row'>
-                            <div className='col-md-4'>
-                                <button type="button" className="btn btn-primary" onClick={this.updateTask.bind(this, data.taskId,
-                                    data.taskName, data.startDate, data.endDate, data.priority, data.projectId, data.projectName,
-                                    data.parentTaskId, data.parentName, data.userId, data.userName)}>UPDATE</button>
-                            </div>
-                            <div className='col-md-6'>
+                        {data.status !== 'complete' ?
+                            <div className='row'>
+                                <div className='col-md-4'>
+                                    <button type="button" className="btn btn-primary" onClick={this.updateTask.bind(this, data.taskId,
+                                        data.taskName, data.startDate, data.endDate, data.priority, data.projectId, data.projectName,
+                                        data.parentTaskId, data.parentName, data.userId, data.userName)}>UPDATE</button>
+                                </div>
+                                <div className='col-md-6'>
 
-                                <button type="button" className="btn btn-danger" onClick={this.completeTask.bind(this, data.taskId)}>END TASK</button>
+                                    <button type="button" className="btn btn-danger" onClick={this.completeTask.bind(this, data.taskId)}>END TASK</button>
+                                </div>
                             </div>
-                        </div>
-                        {/* : <button type="button" className="btn btn-danger" disabled>COMPLETED TASK</button>} */}
+                            : <button type="button" className="btn btn-danger" disabled>COMPLETED TASK</button>}
                     </td>
                 </tr>
 
@@ -133,6 +135,8 @@ class ViewTask extends React.Component {
     setGoToUpdate = () => {
         this.setState({ goToUpdate: 0 })
     }
+
+    
 
     render() {
 
@@ -150,15 +154,11 @@ class ViewTask extends React.Component {
         return (
             <div>
                 {this.state.goToUpdate ?
-
                     <div> <Task id={this.state.id} taskName={this.state.taskName} startDate={this.state.startDate} endDate={this.state.endDate}
                         priority={this.state.priority} update={true} parentTaskName={this.state.parentName} parentId={this.state.parentId}
-                        projectId={this.state.projectId} projectName={this.state.projectName} userId={this.state.userId} userName={this.state.userName} />
-
+                        projectId={this.state.projectId} projectName={this.state.projectName} userId={this.state.userId} userName={this.state.userName} callBk={this.setGoToUpdate} />
                         <button className="btn btn-success" onClick={this.setGoToUpdate.bind(this)}>Go Back</button>
-
-                    </div>
-                    :
+                    </div> :
                     <div className='container-fluid'>
                         <br /><br />
                         <form className='form-group' classID='myForm'>

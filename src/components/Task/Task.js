@@ -15,15 +15,17 @@ class Task extends React.Component {
       filterKeyword2: "",
       filterKeyword3: "",
       projectDetails: [],
-      project: "",
+      project: this.props.projectName,
       parentTaskDetails: [],
       parentTask: this.props.parentTaskName,
-      user: "",
+      user: this.props.userName,
       status: "",
       usersDetails: [],
-      projectId: '',
-      userId: '',
-      parentTaskId: ''
+      projectId: this.props.projectId,
+      userId: this.props.userId,
+      id: this.props.id,
+      parentTaskId: this.props.parentId,
+
     };
   }
 
@@ -137,9 +139,41 @@ class Task extends React.Component {
   }
 
   onUpdate() {
+    const task = {
+      id: this.state.id,
+      userId: this.state.userId,
+      taskName: this.state.taskName,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
+      priority: this.state.priority,
+      status: this.state.status,
+      projectId: this.state.projectId,
+      parentId: this.state.parentTaskId
+    };
+
+    console.log(task)
+
+    axios.put("http://localhost:9091/projectmanager/tasks/updateTask/"+this.state.id, task).then(res => {
+      console.log(res.data);
+    });
+
+    this.props.callBk();
 
   }
 
+  cancelBtnClicked(){
+    this.setState({
+      priority: "0",
+      taskName:'' ,
+      project: '',
+      parentTask: '',
+      user: '',
+      status: "",
+      projectId: '',
+      userId: '',
+      parentTaskId: ''
+    })
+  }
 
   render() {
     let filteredItems;
@@ -197,7 +231,7 @@ class Task extends React.Component {
                   <label>Project:</label>
                 </div>
                 <div className="col-md-8">
-                  <input type="text" className="form-control" placeholder={this.state.project} disabled />
+                  <input type="text" className="form-control" value={this.state.project} disabled />
                 </div>
                 <div className="col-md-1">
                   <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
@@ -265,7 +299,7 @@ class Task extends React.Component {
                   <label>Parent Task :</label>
                 </div>
                 <div className="col-sm-8">
-                  <input type="text" className="form-control" placeholder={this.state.parentTask} disabled={!this.state.value} disabled />
+                  <input type="text" className="form-control" value={this.state.parentTask}  disabled={!this.state.value} disabled />
                 </div>
                 <div className="col-sm-1">
                   <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal2" onClick={this.componentWillMount} disabled={!this.state.value} >
@@ -340,7 +374,7 @@ class Task extends React.Component {
                   <label>User:</label>
                 </div>
                 <div className="col-sm-8">
-                  <input type="text" className="form-control" placeholder={this.state.user} disabled={!this.state.value} disabled />
+                  <input type="text" className="form-control" value={this.state.user} disabled={!this.state.value} disabled />
                 </div>
                 <div className="col-sm-1">
                   <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal3" disabled={!this.state.value}>Search </button>
@@ -381,7 +415,7 @@ class Task extends React.Component {
                   }
                 </div>
                 <div className="col-md-1">
-                  <button type="button" className="btn btn-secondary">Cancel</button>
+                  <button type="button" className="btn btn-secondary" onClick={this.cancelBtnClicked.bind(this)} >Cancel</button>
                 </div>
               </div><br />
             </form>
