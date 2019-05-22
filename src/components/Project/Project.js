@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import './addProject.css';
 import swal from 'sweetalert';
-
+import { PROJECT_MANAGER_API } from '../Constant/Constant'
 
 export default class Project extends React.Component {
     constructor(props) {
@@ -23,7 +23,7 @@ export default class Project extends React.Component {
             flag: false,
             projectManager: '',
             sort: 0,
-            errormsg:"Fill the mandetory fields properly!!"
+            errormsg: "Fill the mandetory fields properly!!"
         };
     }
 
@@ -91,10 +91,10 @@ export default class Project extends React.Component {
 
     componentWillMount() {
         this.setStartEndDates();
-        axios.get("http://localhost:9091/projectmanager/user/getAllUsers").then(res => {
+        axios.get(PROJECT_MANAGER_API + "user/getAllUsers").then(res => {
             this.setState({ usersDetails: res.data })
         });
-        axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
+        axios.get(PROJECT_MANAGER_API + "projects/getTaskProjects").then(res => {
             this.setState({ getProjects: res.data })
         })
     }
@@ -114,32 +114,28 @@ export default class Project extends React.Component {
             endDate: this.state.endDate,
             priority: this.state.priority
         }
-        if(this.state.projectName.length>0 && this.state.userName.length>0){
-        axios.post("http://localhost:9091/projectmanager/projects/saveProject", project).then(res => {
-            this.setState({ addProject: res.data })
-            this.getProject()
-        })
-        this.setState(prevState => ({
-            startDate: '',
-            endDate: '',
-            priority: '0',
-            value: true,
-            projectName: '',
-            usersDetails: [],
-            selectRowProp: [],
-            filterKeyword: "",
-            userName: '',
-            managerDetails: [],
-            addProject: []
-        }))
-    }
-    else{
-        swal(this.state.errormsg)
-    }
+        if (this.state.projectName.length > 0 && this.state.userName.length > 0) {
+            axios.post(PROJECT_MANAGER_API + "projects/saveProject", project).then(res => {
+                this.setState({ addProject: res.data })
+                this.getProject()
+            })
+            this.setState(prevState => ({
+                priority: '0',
+                value: true,
+                projectName: '',
+                filterKeyword: "",
+                userName: '',
+                startDate: new Date(),
+                endDate: new Date().setDate(new Date().getDate() + 1),
+            }))
+        }
+        else {
+            swal(this.state.errormsg)
+        }
     }
 
     getProject() {
-        axios.get("http://localhost:9091/projectmanager/projects/getTaskProjects").then(res => {
+        axios.get(PROJECT_MANAGER_API + "projects/getTaskProjects").then(res => {
             this.setState({ getProjects: res.data })
         })
     }
@@ -218,7 +214,7 @@ export default class Project extends React.Component {
     }
 
     suspendProject(id) {
-        axios.put("http://localhost:9091/projectmanager/projects/deleteProject/" + id).then(res => {
+        axios.put(PROJECT_MANAGER_API + "projects/deleteProject/" + id).then(res => {
             this.getProject()
         })
     }
@@ -243,22 +239,18 @@ export default class Project extends React.Component {
             endDate: this.state.endDate,
             priority: this.state.priority
         }
-        axios.put("http://localhost:9091/projectmanager/projects/updateProject/" + this.state.id, project).then(res => {
+        axios.put(PROJECT_MANAGER_API + "projects/updateProject/" + this.state.id, project).then(res => {
             this.getProject()
         })
         this.setState(prevState => ({
-            startDate: '',
-            endDate: '',
             priority: '0',
             value: true,
             projectName: '',
-            usersDetails: [],
-            selectRowProp: [],
             filterKeyword: "",
             userName: '',
-            managerDetails: [],
-            addProject: [],
-            flag: false
+            flag: false,
+            startDate: new Date(),
+            endDate: new Date().setDate(new Date().getDate() + 1),
         }))
     }
 
@@ -286,34 +278,32 @@ export default class Project extends React.Component {
             this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
                 .map((getProjects) => {
                     return (
-                        <div className='col-md-2'>
-                            <tbody>
-                                <tr>
-                                    <td className='table-style'><b>Project Name :</b></td>
-                                    <td key={getProjects.projectRecord.projectId} className='table-style'>{getProjects.projectRecord.projectName}</td>
-                                    <td key={getProjects.priority} className=''><b>Priority</b></td>
-                                    <td>
-                                        <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
-                                            getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
-                                            getProjects.projectRecord.userId, getProjects.projectRecord.userName)}>UPDATE</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td key={getProjects.completedTask + 1} className='table-style'><b>Completed:  </b>{getProjects.completedTask}</td>
-                                    <td key={getProjects.noOfTask} className='table-style'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
-                                    <td key={getProjects.projectRecord.priority} className='table-style'>{getProjects.projectRecord.priority}</td>
-                                    <td>
-                                        <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td key={getProjects.projectRecord.startDate} className='table-style'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
-                                    <td key={getProjects.projectRecord.endDate} className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
-                                    <td className='table-style'></td>
-                                </tr>
-                                <tr><td><hr /></td><td><hr /></td><td><hr /></td><td><hr /></td></tr>
-                            </tbody>
-                            </div>
+                        <tbody>
+                            <tr>
+                                <td className='table-style'><b>Project Name :</b></td>
+                                <td key={getProjects.projectRecord.projectId} className='table-style'>{getProjects.projectRecord.projectName}</td>
+                                <td key={getProjects.priority} className=''><b>Priority</b></td>
+                                <td>
+                                    <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
+                                        getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
+                                        getProjects.projectRecord.userId, getProjects.projectRecord.userName)}>UPDATE</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td key={getProjects.completedTask + 1} className='table-style'><b>Completed:  </b>{getProjects.completedTask}</td>
+                                <td key={getProjects.noOfTask + 1} className='table-style'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
+                                <td key={getProjects.projectRecord.priority} className='table-style'>{getProjects.projectRecord.priority}</td>
+                                <td>
+                                    <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td key={getProjects.projectRecord.startDate} className='table-style'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
+                                <td key={getProjects.projectRecord.endDate} className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
+                                <td className='table-style'></td>
+                            </tr>
+                            <tr><td><hr /></td><td><hr /></td><td><hr /></td><td><hr /></td></tr>
+                        </tbody>
                     )
                 });
         }
@@ -378,7 +368,7 @@ export default class Project extends React.Component {
                                 <div className='col-md-6'>
                                     <input type='text' className="form-control" name='manager' value={this.state.userName} disabled />
                                 </div>
-                                <div className='col-sm-2'>
+                                <div className='col-md-2'>
                                     <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
                                     <div className="modal fade" id="myModal" role="dialog">
                                         <div className="modal-dialog">

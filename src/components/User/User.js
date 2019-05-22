@@ -2,7 +2,7 @@ import React from 'react';
 import axios from "axios";
 import './User.css';
 import swal from 'sweetalert';
-
+import { PROJECT_MANAGER_API } from '../Constant/Constant'
 
 class User extends React.Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class User extends React.Component {
             filteredValue: '',
             filteredItems: '',
             sort: 0,
-            errormsg:"Fill the mandetory fields properly!!",
+            errormsg: "Fill the mandetory fields properly!!",
             errorIDmsg: "Employee Id should be of 6 digits!!"
         };
     }
@@ -50,37 +50,37 @@ class User extends React.Component {
             lastName: this.state.lastName,
             empId: this.state.empId
         }
-        if(this.state.firstName.length > 0 && this.state.lastName.length > 0 && this.state.empId.length >0){
-            if(this.state.empId.length=== 6){
-        axios.post("http://localhost:9091/projectmanager/user/saveUser", user)
-            .then(res => {
-                this.setState({ addData: res.data });
-                this.getUserData();
-            });
-        this.setState(prevState => ({
-            firstName: "",
-            lastName: "",
-            empId: ""
-        }))
-    }
-    else{
-        swal(this.state.errorIDmsg)
-    }
-    }
-    else{
-        swal(this.state.errormsg)
-    }
+        if (this.state.firstName.length > 0 && this.state.lastName.length > 0 && this.state.empId.length > 0) {
+            if (this.state.empId.length === 6) {
+                axios.post(PROJECT_MANAGER_API + "user/saveUser", user)
+                    .then(res => {
+                        this.setState({ addData: res.data });
+                        this.getUserData();
+                    });
+                this.setState(prevState => ({
+                    firstName: "",
+                    lastName: "",
+                    empId: ""
+                }))
+            }
+            else {
+                swal(this.state.errorIDmsg)
+            }
+        }
+        else {
+            swal(this.state.errormsg)
+        }
     }
 
     componentDidMount() {
-        axios.get("http://localhost:9091/projectmanager/user/getAllUsers")
+        axios.get(PROJECT_MANAGER_API + "user/getAllUsers")
             .then(res => {
                 this.setState({ getData: res.data });
             });
     }
 
     getUserData() {
-        axios.get("http://localhost:9091/projectmanager/user/getAllUsers")
+        axios.get(PROJECT_MANAGER_API + "user/getAllUsers")
             .then(res => {
                 this.setState({ getData: res.data });
             });
@@ -95,19 +95,19 @@ class User extends React.Component {
     }
 
     deleteUser(id) {
-        axios.delete("http://localhost:9091/projectmanager/user/deleteUser/" + id).then(res => {
+        axios.delete(PROJECT_MANAGER_API + "user/deleteUser/" + id).then(res => {
             this.getUserData();
         })
     }
 
-    onUpdate(id,e) {
+    onUpdate(id, e) {
         e.preventDefault()
         const user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             empId: this.state.empId
         }
-        axios.put("http://localhost:9091/projectmanager/user/updateUser/" + id, user).then(res => {
+        axios.put(PROJECT_MANAGER_API + "user/updateUser/" + id, user).then(res => {
             this.getUserData();
         })
         this.setState(prevState => ({
@@ -186,7 +186,7 @@ class User extends React.Component {
                                 <div className='col-12 col-md-9'>
                                     <input type='text' key={getData.userId} className='form-control' value={getData.firstName} readOnly />
                                     <input type='text' key={getData.lastName} className='form-control' value={getData.lastName} readOnly />
-                                    <input type='text'  key={getData.empId} className='form-control' value={getData.empId} readOnly />
+                                    <input type='text' key={getData.empId} className='form-control' value={getData.empId} readOnly />
                                 </div>
                                 <div className='col-12 col-md-3'>
                                     <button type="button" className="btn btn-primary" onClick={this.updateUser.bind(this, getData.userId, getData.firstName, getData.lastName, getData.empId)}>UPDATE</button>
@@ -211,7 +211,7 @@ class User extends React.Component {
                                     <label>First Name :</label>
                                 </div>
                                 <div className='col-md-8'>
-                                    <input type='text' className="form-control" name='firstName' value={this.state.firstName}
+                                    <input type='text' className="form-control" id='firstName' value={this.state.firstName}
                                         onChange={this.onFirstChange.bind(this)} />
                                 </div>
                                 <div className='col-md-1'></div>
@@ -221,7 +221,7 @@ class User extends React.Component {
                                     <label>Last Name :</label>
                                 </div>
                                 <div className='col-md-8'>
-                                    <input type='text' className="form-control" name='lastName' value={this.state.lastName}
+                                    <input type='text' className="form-control" id='lastName' value={this.state.lastName}
                                         onChange={this.onLastChange.bind(this)} />
                                 </div>
                                 <div className='col-md-1'></div>
@@ -231,7 +231,7 @@ class User extends React.Component {
                                     <label>Employee ID :</label>
                                 </div>
                                 <div className='col-md-4'>
-                                    <input type='text'  minLength='6' maxLength='6' className="form-control" name='lastName' value={this.state.empId}
+                                    <input type='text' minLength='6' maxLength='6' className="form-control" id='empId' value={this.state.empId}
                                         onChange={this.onEmpId.bind(this)} />
                                 </div>
                                 <div className='col-md-5'></div>
@@ -242,14 +242,14 @@ class User extends React.Component {
                                     <div className='row'>
                                         {this.state.flag === false ?
                                             <div className='col-md-3'>
-                                                <button type='submit' className='btn btn-secondary' onClick={this.onAddUser.bind(this)}>Add</button>
+                                                <button type='submit' className='btn btn-secondary' id='addBtn' onClick={this.onAddUser.bind(this)}>Add</button>
                                             </div> :
                                             <div className='col-md-4'>
-                                                <button type='submit' className='btn btn-secondary' onClick={this.onUpdate.bind(this, this.state.updateId)}>Update</button>
+                                                <button type='submit' className='btn btn-secondary' id='updateBtn' onClick={this.onUpdate.bind(this, this.state.updateId)}>Update</button>
                                             </div>
                                         }
                                         <div className='col-md-6'>
-                                            <button type='button' className='btn btn-secondary' onClick={this.cancelCourse.bind(this)} value="Reset">Reset</button>
+                                            <button type='button' className='btn btn-secondary' id='cancelBtn' onClick={this.cancelCourse.bind(this)} value="Reset">Reset</button>
                                         </div>
                                     </div>
                                     <br />

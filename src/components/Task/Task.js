@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import './Task.css';
 import swal from 'sweetalert';
+import { PROJECT_MANAGER_API } from '../Constant/Constant'
 
 class Task extends React.Component {
   constructor(props) {
@@ -32,17 +33,17 @@ class Task extends React.Component {
 
   componentWillMount = () => {
     this.setStartEndDates();
-    axios.get("http://localhost:9091/projectmanager/projects/getProjects")
+    axios.get(PROJECT_MANAGER_API + "projects/getProjects")
       .then(res => {
         this.setState({ projectDetails: res.data });
       });
 
-    axios.get("http://localhost:9091/projectmanager/parentTask/getParentTasks")
+    axios.get(PROJECT_MANAGER_API + "parentTask/getParentTasks")
       .then(res => {
         this.setState({ parentTaskDetails: res.data });
       });
 
-    axios.get("http://localhost:9091/projectmanager/user/getAllUsers")
+    axios.get(PROJECT_MANAGER_API + "user/getAllUsers")
       .then(res => {
         this.setState({ usersDetails: res.data });
       });
@@ -118,8 +119,9 @@ class Task extends React.Component {
         const parentTask = {
           taskName: this.state.taskName
         }
-        axios.post("http://localhost:9091/projectmanager/parentTask/save", parentTask)
+        axios.post(PROJECT_MANAGER_API + "parentTask/save", parentTask)
         this.setState({
+          project:'',
           taskName: ''
         })
       } else {
@@ -133,7 +135,7 @@ class Task extends React.Component {
           projectId: this.state.projectId,
           parentTaskId: this.state.parentTaskId
         };
-        axios.post("http://localhost:9091/projectmanager/tasks/saveTask", task)
+        axios.post(PROJECT_MANAGER_API + "tasks/saveTask", task)
         this.setState(prevState => ({
           priority: "0",
           taskName: '',
@@ -167,8 +169,8 @@ class Task extends React.Component {
       projectId: this.state.projectId,
       parentId: this.state.parentTaskId
     };
-    axios.put("http://localhost:9091/projectmanager/tasks/updateTask/" + this.state.id, task)
-   
+    axios.put(PROJECT_MANAGER_API + "tasks/updateTask/" + this.state.id, task)
+
     this.props.callBk();
   }
 

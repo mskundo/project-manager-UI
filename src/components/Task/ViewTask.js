@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios'
 import Task from './Task'
+import { PROJECT_MANAGER_API } from '../Constant/Constant'
 
 class ViewTask extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class ViewTask extends React.Component {
     }
 
     componentWillMount() {
-        axios.get("http://localhost:9091/projectmanager/projects/getProjects").then(res => {
+        axios.get(PROJECT_MANAGER_API + "projects/getProjects").then(res => {
             this.setState({ projectDetails: res.data })
         });
     }
@@ -42,7 +43,7 @@ class ViewTask extends React.Component {
         this.setState({ details: projectDetails })
         this.setState({ projectName: projectDetails.projectName })
         this.setState({ projectId: projectDetails.projectId });
-        axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + projectDetails.projectId).then(res => {
+        axios.get(PROJECT_MANAGER_API + "tasks/SearchTask/" + projectDetails.projectId).then(res => {
             this.setState({ taskDetails: res.data })
         })
     }
@@ -135,8 +136,8 @@ class ViewTask extends React.Component {
     }
 
     completeTask(id) {
-        axios.put("http://localhost:9091/projectmanager/tasks/deleteTask/" + id).then(res => {
-            axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + this.state.projectId).then(res => {
+        axios.put(PROJECT_MANAGER_API + "tasks/deleteTask/" + id).then(res => {
+            axios.get(PROJECT_MANAGER_API + "tasks/SearchTask/" + this.state.projectId).then(res => {
                 this.setState({ taskDetails: res.data })
             })
         })
@@ -173,8 +174,8 @@ class ViewTask extends React.Component {
 
     setGoToUpdate = () => {
         this.setState({ goToUpdate: 0 })
-        }
-    
+    }
+
 
     render() {
         let filteredItems;
@@ -262,7 +263,7 @@ class ViewTask extends React.Component {
                             <div className='row'>
                                 <div className='col col-md-2'></div>
                                 <div className='col col-md-9'>
-                                    <table className="table table-responsive">
+                                    <table className="table table-responsive table-borderless">
                                         <thead>
                                             <tr>
                                                 <th className="text-center">TASK NAME</th>
