@@ -7,11 +7,11 @@ describe('User', () => {
   beforeEach(() => wrapper = shallow(<User />));
 
   it('should render a <input /> in add user', () => {
-    expect(wrapper.find('input').length).toEqual(3);
+    expect(wrapper.find('input').length).toEqual(7);
   });
 
   it('should render a <div /> in add user', () => {
-    expect(wrapper.find('div').length).toEqual(24);
+    expect(wrapper.find('div').length).toEqual(35);
   });
 
 });

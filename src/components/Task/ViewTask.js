@@ -154,12 +154,12 @@ class ViewTask extends React.Component {
                     <td>
                         {data.status !== 'complete' ?
                             <div className='row'>
-                                <div className='col-md-4'>
+                                <div className='col-12 col-md-5'>
                                     <button type="button" className="btn btn-primary" onClick={this.updateTask.bind(this, data.taskId,
                                         data.taskName, data.startDate, data.endDate, data.priority, data.projectId, data.projectName,
                                         data.parentTaskId, data.parentName, data.userId, data.userName)}>UPDATE</button>
                                 </div>
-                                <div className='col-md-6'>
+                                <div className='col-12 col-md-7'>
 
                                     <button type="button" className="btn btn-danger" onClick={this.completeTask.bind(this, data.taskId)}>END TASK</button>
                                 </div>
@@ -173,10 +173,10 @@ class ViewTask extends React.Component {
 
     setGoToUpdate = () => {
         this.setState({ goToUpdate: 0 })
-    }
+        }
+    
 
     render() {
-
         let filteredItems;
         if (this.state.projectDetails) {
             filteredItems = this.state.projectDetails.filter(projectDetails => projectDetails.projectName.toUpperCase().includes(this.state.filterKeyword.toUpperCase())).map((projectDetails, index) => {
@@ -201,33 +201,32 @@ class ViewTask extends React.Component {
                         <form className='form-group' classID='myForm'>
                             <div className='row' id="selectProject">
                                 <div className='col-sm-1'></div>
-                                <div className='col-sm-1'>
-                                    <label>Project :</label>
+                                <div className='col-3 col-sm-1'>
+                                    <label>Project </label>
                                 </div>
-                                <div className='col-sm-1'>
+                                <div className='col-5 col-sm-3'>
                                     <input type='text' className="form-control" name='manager' placeholder={this.state.projectName} disabled={true} />
                                 </div>
-                                <div className='col-sm-1'>
+                                <div className='col-2  col-sm-1'>
                                     <button type='button' className="btn btn-secondary searchBtn" data-toggle="modal" data-target="#myModal">Search</button>
                                 </div>
-                                <div className='col-sm-1'></div>
-                                <div className='col-sm-1'>
+                                <div className='col-12 col-sm-1'>
                                     <b>Sort Task By:</b>
                                 </div>
 
-                                <div className='col-sm-1'>
+                                <div className='col-6 col-sm-1'>
                                     <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this, this.state.sort)}>StartDate</button>
                                 </div>
 
-                                <div className='col-sm-1'>
+                                <div className='col-6 col-sm-1'>
                                     <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this, this.state.sort)}>End Date</button>
                                 </div>
 
-                                <div className='col-sm-1'>
+                                <div className='col-6 col-sm-1'>
                                     <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this, this.state.sort)}>Priority</button>
                                 </div>
 
-                                <div className='col-sm-1'>
+                                <div className='col-6 col-sm-1'>
                                     <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this, this.state.sort)}>Completed</button>
                                 </div>
 
@@ -261,9 +260,9 @@ class ViewTask extends React.Component {
                                 </div>
                             </div>
                             <div className='row'>
-                                <div className='col-md-2'></div>
-                                <div className='col-md-9'>
-                                    <table className="table table-borderless table-condensed">
+                                <div className='col col-md-2'></div>
+                                <div className='col col-md-9'>
+                                    <table className="table table-responsive">
                                         <thead>
                                             <tr>
                                                 <th className="text-center">TASK NAME</th>
@@ -280,7 +279,7 @@ class ViewTask extends React.Component {
                                         </tbody>
                                     </table>
                                 </div>
-                                <div className='col-md-1'></div>
+                                <div className='col col-md-1'></div>
                             </div>
                         </form>
                     </div>

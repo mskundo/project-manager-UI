@@ -1,6 +1,8 @@
 import React from 'react';
-import axios from "axios"
-import './User.css'
+import axios from "axios";
+import './User.css';
+import swal from 'sweetalert';
+
 
 class User extends React.Component {
     constructor(props) {
@@ -15,7 +17,9 @@ class User extends React.Component {
             updateId: 0,
             filteredValue: '',
             filteredItems: '',
-            sort: 0
+            sort: 0,
+            errormsg:"Fill the mandetory fields properly!!",
+            errorIDmsg: "Employee Id should be of 6 digits!!"
         };
     }
 
@@ -46,6 +50,8 @@ class User extends React.Component {
             lastName: this.state.lastName,
             empId: this.state.empId
         }
+        if(this.state.firstName.length > 0 && this.state.lastName.length > 0 && this.state.empId.length >0){
+            if(this.state.empId.length=== 6){
         axios.post("http://localhost:9091/projectmanager/user/saveUser", user)
             .then(res => {
                 this.setState({ addData: res.data });
@@ -56,6 +62,14 @@ class User extends React.Component {
             lastName: "",
             empId: ""
         }))
+    }
+    else{
+        swal(this.state.errorIDmsg)
+    }
+    }
+    else{
+        swal(this.state.errormsg)
+    }
     }
 
     componentDidMount() {
@@ -96,6 +110,12 @@ class User extends React.Component {
         axios.put("http://localhost:9091/projectmanager/user/updateUser/" + id, user).then(res => {
             this.getUserData();
         })
+        this.setState(prevState => ({
+            firstName: "",
+            lastName: "",
+            empId: "",
+            flag: false
+        }))
     }
 
     sortByFname(count) {
@@ -163,12 +183,12 @@ class User extends React.Component {
                     return (
                         <div>
                             <div class='row'>
-                                <div className='col-md-9'>
+                                <div className='col-12 col-md-9'>
                                     <input type='text' key={getData.userId} className='form-control' value={getData.firstName} readOnly />
                                     <input type='text' key={getData.lastName} className='form-control' value={getData.lastName} readOnly />
                                     <input type='text'  key={getData.empId} className='form-control' value={getData.empId} readOnly />
                                 </div>
-                                <div className='col-md-3'>
+                                <div className='col-12 col-md-3'>
                                     <button type="button" className="btn btn-primary" onClick={this.updateUser.bind(this, getData.userId, getData.firstName, getData.lastName, getData.empId)}>UPDATE</button>
                                     <button type="button" className="btn btn-danger" onClick={this.deleteUser.bind(this, getData.userId)}>DELETE</button>
                                 </div>

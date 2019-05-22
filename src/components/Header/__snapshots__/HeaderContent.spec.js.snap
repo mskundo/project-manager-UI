@@ -52,7 +52,7 @@ ShallowWrapper {
                     className="nav-name"
                   >
                     <NavLink
-                      to="/AddProject"
+                      to="/Project"
                     >
                       Add Project
                     </NavLink>
@@ -91,7 +91,7 @@ ShallowWrapper {
           />
           <Route
             component={[Function]}
-            path="/AddProject"
+            path="/Project"
           />
           <Route
             component={[Function]}
@@ -144,7 +144,7 @@ ShallowWrapper {
                       className="nav-name"
                     >
                       <NavLink
-                        to="/AddProject"
+                        to="/Project"
                       >
                         Add Project
                       </NavLink>
@@ -183,7 +183,7 @@ ShallowWrapper {
             />
             <Route
               component={[Function]}
-              path="/AddProject"
+              path="/Project"
             />
             <Route
               component={[Function]}
@@ -233,7 +233,7 @@ ShallowWrapper {
                       className="nav-name"
                     >
                       <NavLink
-                        to="/AddProject"
+                        to="/Project"
                       >
                         Add Project
                       </NavLink>
@@ -296,7 +296,7 @@ ShallowWrapper {
                       className="nav-name"
                     >
                       <NavLink
-                        to="/AddProject"
+                        to="/Project"
                       >
                         Add Project
                       </NavLink>
@@ -355,7 +355,7 @@ ShallowWrapper {
                       className="nav-name"
                     >
                       <NavLink
-                        to="/AddProject"
+                        to="/Project"
                       >
                         Add Project
                       </NavLink>
@@ -410,7 +410,7 @@ ShallowWrapper {
                       className="nav-name"
                     >
                       <NavLink
-                        to="/AddProject"
+                        to="/Project"
                       >
                         Add Project
                       </NavLink>
@@ -462,7 +462,7 @@ ShallowWrapper {
                         className="nav-name"
                       >
                         <NavLink
-                          to="/AddProject"
+                          to="/Project"
                         >
                           Add Project
                         </NavLink>
@@ -545,7 +545,7 @@ ShallowWrapper {
                       "nodeType": "host",
                       "props": Object {
                         "children": <NavLink
-                          to="/AddProject"
+                          to="/Project"
                         >
                           Add Project
                         </NavLink>,
@@ -558,7 +558,7 @@ ShallowWrapper {
                         "nodeType": "function",
                         "props": Object {
                           "children": "Add Project",
-                          "to": "/AddProject",
+                          "to": "/Project",
                         },
                         "ref": null,
                         "rendered": "Add Project",
@@ -646,7 +646,7 @@ ShallowWrapper {
               />,
               <Route
                 component={[Function]}
-                path="/AddProject"
+                path="/Project"
               />,
               <Route
                 component={[Function]}
@@ -680,7 +680,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "component": [Function],
-                "path": "/AddProject",
+                "path": "/Project",
               },
               "ref": null,
               "rendered": null,
@@ -758,7 +758,7 @@ ShallowWrapper {
                       className="nav-name"
                     >
                       <NavLink
-                        to="/AddProject"
+                        to="/Project"
                       >
                         Add Project
                       </NavLink>
@@ -797,7 +797,7 @@ ShallowWrapper {
             />
             <Route
               component={[Function]}
-              path="/AddProject"
+              path="/Project"
             />
             <Route
               component={[Function]}
@@ -850,7 +850,7 @@ ShallowWrapper {
                         className="nav-name"
                       >
                         <NavLink
-                          to="/AddProject"
+                          to="/Project"
                         >
                           Add Project
                         </NavLink>
@@ -889,7 +889,7 @@ ShallowWrapper {
               />
               <Route
                 component={[Function]}
-                path="/AddProject"
+                path="/Project"
               />
               <Route
                 component={[Function]}
@@ -939,7 +939,7 @@ ShallowWrapper {
                         className="nav-name"
                       >
                         <NavLink
-                          to="/AddProject"
+                          to="/Project"
                         >
                           Add Project
                         </NavLink>
@@ -1002,7 +1002,7 @@ ShallowWrapper {
                         className="nav-name"
                       >
                         <NavLink
-                          to="/AddProject"
+                          to="/Project"
                         >
                           Add Project
                         </NavLink>
@@ -1061,7 +1061,7 @@ ShallowWrapper {
                         className="nav-name"
                       >
                         <NavLink
-                          to="/AddProject"
+                          to="/Project"
                         >
                           Add Project
                         </NavLink>
@@ -1116,7 +1116,7 @@ ShallowWrapper {
                         className="nav-name"
                       >
                         <NavLink
-                          to="/AddProject"
+                          to="/Project"
                         >
                           Add Project
                         </NavLink>
@@ -1168,7 +1168,7 @@ ShallowWrapper {
                           className="nav-name"
                         >
                           <NavLink
-                            to="/AddProject"
+                            to="/Project"
                           >
                             Add Project
                           </NavLink>
@@ -1251,7 +1251,7 @@ ShallowWrapper {
                         "nodeType": "host",
                         "props": Object {
                           "children": <NavLink
-                            to="/AddProject"
+                            to="/Project"
                           >
                             Add Project
                           </NavLink>,
@@ -1264,7 +1264,7 @@ ShallowWrapper {
                           "nodeType": "function",
                           "props": Object {
                             "children": "Add Project",
-                            "to": "/AddProject",
+                            "to": "/Project",
                           },
                           "ref": null,
                           "rendered": "Add Project",
@@ -1352,7 +1352,7 @@ ShallowWrapper {
                 />,
                 <Route
                   component={[Function]}
-                  path="/AddProject"
+                  path="/Project"
                 />,
                 <Route
                   component={[Function]}
@@ -1386,7 +1386,7 @@ ShallowWrapper {
                 "nodeType": "class",
                 "props": Object {
                   "component": [Function],
-                  "path": "/AddProject",
+                  "path": "/Project",
                 },
                 "ref": null,
                 "rendered": null,

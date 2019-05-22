@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
+import { shallow } from 'enzyme';
 import Project from './Project';
 
 describe('Project', () => {
@@ -11,7 +11,7 @@ describe('Project', () => {
     });
 
     it('should render a <div /> in project', () => {
-        expect(wrapper.find('div').length).toEqual(52);
+        expect(wrapper.find('div').length).toEqual(51);
     });
 
     it('should render a <form /> in project', () => {

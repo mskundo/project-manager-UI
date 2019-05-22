@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
-import './Task.css'
+import './Task.css';
+import swal from 'sweetalert';
 
 class Task extends React.Component {
   constructor(props) {
@@ -9,23 +10,23 @@ class Task extends React.Component {
       startDate: new Date(),
       endDate: new Date().setDate(new Date().getDate() + 1),
       priority: this.props.update ? this.props.priority : "0",
-      taskName: this.props.taskName,
+      taskName: this.props.taskName || '',
       value: true,
       filterKeyword: "",
       filterKeyword2: "",
       filterKeyword3: "",
       projectDetails: [],
-      project: this.props.projectName,
+      project: this.props.projectName || '',
       parentTaskDetails: [],
       parentTask: this.props.parentTaskName,
-      user: this.props.userName,
+      user: this.props.userName || '',
       status: "",
       usersDetails: [],
       projectId: this.props.projectId,
       userId: this.props.userId,
       id: this.props.id,
       parentTaskId: this.props.parentId,
-
+      errormsg: "Fill the mandetory fields properly!!"
     };
   }
 
@@ -112,29 +113,45 @@ class Task extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-    if (this.state.value === false) {
-      const parentTask = {
-        taskName: this.state.taskName
+    if ((this.state.project.length > 0 && this.state.taskName.length > 0 && this.state.value === false) || (this.state.project.length > 0 && this.state.taskName.length > 0 && this.state.value === true && this.state.user.length > 0)) {
+      if (this.state.value === false) {
+        const parentTask = {
+          taskName: this.state.taskName
+        }
+        axios.post("http://localhost:9091/projectmanager/parentTask/save", parentTask)
+        this.setState({
+          taskName: ''
+        })
+      } else {
+        const task = {
+          userId: this.state.userId,
+          taskName: this.state.taskName,
+          startDate: this.state.startDate,
+          endDate: this.state.endDate,
+          priority: this.state.priority,
+          status: this.state.status,
+          projectId: this.state.projectId,
+          parentTaskId: this.state.parentTaskId
+        };
+        axios.post("http://localhost:9091/projectmanager/tasks/saveTask", task)
+        this.setState(prevState => ({
+          priority: "0",
+          taskName: '',
+          project: '',
+          parentTask: '',
+          user: '',
+          status: "",
+          projectId: '',
+          userId: '',
+          parentTaskId: '',
+          startDate: new Date(),
+          endDate: new Date().setDate(new Date().getDate() + 1),
+        })
+        )
       }
-      axios.post("http://localhost:9091/projectmanager/parentTask/save", parentTask)
-        .then(res => {
-          console.log(res.data);
-        });
-    } else {
-      const task = {
-        userId: this.state.userId,
-        taskName: this.state.taskName,
-        startDate: this.state.startDate,
-        endDate: this.state.endDate,
-        priority: this.state.priority,
-        status: this.state.status,
-        projectId: this.state.projectId,
-        parentTaskId: this.state.parentTaskId
-      };
-      axios.post("http://localhost:9091/projectmanager/tasks/saveTask", task)
-        .then(res => {
-          console.log(res.data);
-        });
+    }
+    else {
+      swal(this.state.errormsg);
     }
   }
 
@@ -150,9 +167,8 @@ class Task extends React.Component {
       projectId: this.state.projectId,
       parentId: this.state.parentTaskId
     };
-    axios.put("http://localhost:9091/projectmanager/tasks/updateTask/" + this.state.id, task).then(res => {
-      console.log(res.data);
-    });
+    axios.put("http://localhost:9091/projectmanager/tasks/updateTask/" + this.state.id, task)
+   
     this.props.callBk();
   }
 
@@ -166,7 +182,9 @@ class Task extends React.Component {
       status: "",
       projectId: '',
       userId: '',
-      parentTaskId: ''
+      parentTaskId: '',
+      startDate: new Date(),
+      endDate: new Date().setDate(new Date().getDate() + 1),
     })
   }
 

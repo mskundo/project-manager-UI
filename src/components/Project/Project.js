@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from 'axios';
 import './addProject.css';
+import swal from 'sweetalert';
+
 
 export default class Project extends React.Component {
     constructor(props) {
@@ -20,7 +22,8 @@ export default class Project extends React.Component {
             userName: '',
             flag: false,
             projectManager: '',
-            sort: 0
+            sort: 0,
+            errormsg:"Fill the mandetory fields properly!!"
         };
     }
 
@@ -111,6 +114,7 @@ export default class Project extends React.Component {
             endDate: this.state.endDate,
             priority: this.state.priority
         }
+        if(this.state.projectName.length>0 && this.state.userName.length>0){
         axios.post("http://localhost:9091/projectmanager/projects/saveProject", project).then(res => {
             this.setState({ addProject: res.data })
             this.getProject()
@@ -124,10 +128,14 @@ export default class Project extends React.Component {
             usersDetails: [],
             selectRowProp: [],
             filterKeyword: "",
-            projectManager: '',
+            userName: '',
             managerDetails: [],
             addProject: []
         }))
+    }
+    else{
+        swal(this.state.errormsg)
+    }
     }
 
     getProject() {
@@ -238,6 +246,20 @@ export default class Project extends React.Component {
         axios.put("http://localhost:9091/projectmanager/projects/updateProject/" + this.state.id, project).then(res => {
             this.getProject()
         })
+        this.setState(prevState => ({
+            startDate: '',
+            endDate: '',
+            priority: '0',
+            value: true,
+            projectName: '',
+            usersDetails: [],
+            selectRowProp: [],
+            filterKeyword: "",
+            userName: '',
+            managerDetails: [],
+            addProject: [],
+            flag: false
+        }))
     }
 
     renderProject() {
@@ -262,9 +284,9 @@ export default class Project extends React.Component {
 
         if (this.state.getProjects) {
             this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
-                .map((getProjects, index) => {
+                .map((getProjects) => {
                     return (
-                        <div>
+                        <div className='col-md-2'>
                             <tbody>
                                 <tr>
                                     <td className='table-style'><b>Project Name :</b></td>
@@ -289,8 +311,9 @@ export default class Project extends React.Component {
                                     <td key={getProjects.projectRecord.endDate} className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
                                     <td className='table-style'></td>
                                 </tr>
-                            </tbody><br /><hr />
-                        </div>
+                                <tr><td><hr /></td><td><hr /></td><td><hr /></td><td><hr /></td></tr>
+                            </tbody>
+                            </div>
                     )
                 });
         }
@@ -355,7 +378,7 @@ export default class Project extends React.Component {
                                 <div className='col-md-6'>
                                     <input type='text' className="form-control" name='manager' value={this.state.userName} disabled />
                                 </div>
-                                <div className='col-md-2'>
+                                <div className='col-sm-2'>
                                     <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
                                     <div className="modal fade" id="myModal" role="dialog">
                                         <div className="modal-dialog">
@@ -411,31 +434,31 @@ export default class Project extends React.Component {
                         </div>
                         <br />
                         <div className="row">
-                            <div className='col-sm-3'>
+                            <div className='col-12 col-sm-3'>
                                 <b>Sort Projects By:</b>
                             </div>
 
-                            <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this, this.state.sort)}>Start Date</button>
+                            <div className='col-6 col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm project-button" onClick={this.sortByStartDate.bind(this, this.state.sort)}>Start Date</button>
                             </div>
 
-                            <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this, this.state.sort)}>End Date</button>
+                            <div className='col-6 col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm project-button" onClick={this.sortByEndDate.bind(this, this.state.sort)}>End Date</button>
                             </div>
 
-                            <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this, this.state.sort)}>Priority</button>
+                            <div className='col-6 col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm project-button" onClick={this.sortByPriority.bind(this, this.state.sort)}>Priority</button>
                             </div>
 
-                            <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this, this.state.sort)}>Completed</button>
+                            <div className='col-6 col-sm-2'>
+                                <button type='button' className="btn btn-info btn-sm project-button" onClick={this.sortByCompleted.bind(this, this.state.sort)}>Completed</button>
                             </div>
 
                         </div>
                         <br />
                         <div className="row">
                             <div className='col-md-12'>
-                                <table className="table table-borderless">
+                                <table className="table table-responsive table-borderless">
                                     {this.renderProject()}
                                 </table>
                             </div>

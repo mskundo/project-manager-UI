@@ -11,7 +11,7 @@ describe('Task', () => {
   });
 
   it('should render a <div /> in Task', () => {
-    expect(wrapper.find('div').length).toEqual(53);
+    expect(wrapper.find('div').length).toEqual(55);
   });
 
   it('should render a <button /> in Task', () => {
