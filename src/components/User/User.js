@@ -86,7 +86,8 @@ class User extends React.Component {
         })
     }
 
-    onUpdate(id) {
+    onUpdate(id,e) {
+        e.preventDefault()
         const user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -158,7 +159,6 @@ class User extends React.Component {
     render() {
         if (this.state.getData) {
             this.state.filteredItems = this.state.getData.filter(getData => getData.firstName.toUpperCase().includes(this.state.filteredValue.toUpperCase()) ||
-                // getData.empId.indexOf(this.state.filteredValue) ||
                 getData.lastName.toUpperCase().includes(this.state.filteredValue.toUpperCase())).map((getData, index) => {
                     return (
                         <div>

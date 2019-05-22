@@ -19,7 +19,8 @@ export default class Project extends React.Component {
             userId: '',
             userName: '',
             flag: false,
-            projectManager: ''
+            projectManager: '',
+            sort: 0
         };
     }
 
@@ -135,40 +136,78 @@ export default class Project extends React.Component {
         })
     }
 
-    sortByStartDate() {
-        this.setState({
-            getProjects: Array.from(this.state.getProjects).sort((a, b) => {
-                return new Date(a.projectRecord.startDate).getTime() -
-                    new Date(b.projectRecord.startDate).getTime()
+    sortByStartDate(count) {
+        if (count === 0) {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => {
+                    return new Date(a.projectRecord.startDate).getTime() - new Date(b.projectRecord.startDate).getTime()
+                })
             })
-        })
-    }
-
-    sortByEndDate() {
-        this.setState({
-            getProjects: Array.from(this.state.getProjects).sort((a, b) => {
-                return new Date(a.projectRecord.endDate).getTime() -
-                    new Date(b.projectRecord.endDate).getTime()
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => {
+                    return new Date(b.projectRecord.startDate).getTime() - new Date(a.projectRecord.startDate).getTime()
+                })
             })
-        })
+            count = 0
+            this.setState({ sort: count })
+        }
+    }
+
+    sortByEndDate(count) {
+        if (count === 0) {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => {
+                    return new Date(a.projectRecord.endDate).getTime() - new Date(b.projectRecord.endDate).getTime()
+                })
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => {
+                    return new Date(b.projectRecord.endDate).getTime() - new Date(a.projectRecord.endDate).getTime()
+                })
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
 
-    sortByPriority() {
-        this.setState({
-            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.priority - b.projectRecord.priority))
-
-        })
-        console.log(this.state.getProjects)
-
+    sortByPriority(count) {
+        if (count === 0) {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.projectRecord.priority - b.projectRecord.priority))
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => (b.projectRecord.priority - a.projectRecord.priority))
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
-    sortByCompleted() {
-        this.setState({
-            getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.completedTask - b.completedTask))
-        })
+    sortByCompleted(count) {
+        if (count === 0) {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => (a.completedTask - b.completedTask))
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                getProjects: Array.from(this.state.getProjects).sort((a, b) => (b.completedTask - a.completedTask))
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
-
 
     suspendProject(id) {
         axios.put("http://localhost:9091/projectmanager/projects/deleteProject/" + id).then(res => {
@@ -199,7 +238,6 @@ export default class Project extends React.Component {
         axios.put("http://localhost:9091/projectmanager/projects/updateProject/" + this.state.id, project).then(res => {
             this.getProject()
         })
-
     }
 
     renderProject() {
@@ -378,19 +416,19 @@ export default class Project extends React.Component {
                             </div>
 
                             <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this)}>Start Date</button>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this, this.state.sort)}>Start Date</button>
                             </div>
 
                             <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this)}>End Date</button>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this, this.state.sort)}>End Date</button>
                             </div>
 
                             <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this)}>Priority</button>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this, this.state.sort)}>Priority</button>
                             </div>
 
                             <div className='col-sm-2'>
-                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this)}>Completed</button>
+                                <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this, this.state.sort)}>Completed</button>
                             </div>
 
                         </div>

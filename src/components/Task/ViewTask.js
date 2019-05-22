@@ -3,7 +3,6 @@ import axios from 'axios'
 import Task from './Task'
 
 class ViewTask extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -25,6 +24,7 @@ class ViewTask extends React.Component {
             parentId: '',
             parentName: '',
             projectId: '',
+            sort: 0
         };
     }
 
@@ -43,39 +43,80 @@ class ViewTask extends React.Component {
         this.setState({ projectName: projectDetails.projectName })
         this.setState({ projectId: projectDetails.projectId });
         axios.get("http://localhost:9091/projectmanager/tasks/SearchTask/" + projectDetails.projectId).then(res => {
-            console.log(res.data)
             this.setState({ taskDetails: res.data })
         })
     }
 
-    sortByStartDate() {
-        this.setState({
-            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
-                return new Date(a.startDate).getTime() -
-                    new Date(b.startDate).getTime()
+    sortByStartDate(count) {
+        if (count === 0) {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
+                    return new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+                })
             })
-        })
-    }
-
-    sortByEndDate() {
-        this.setState({
-            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
-                return new Date(a.endDate).getTime() -
-                    new Date(b.endDate).getTime()
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
+                    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+                })
             })
-        })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
-    sortByPriority() {
-        this.setState({
-            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => (a.priority - b.priority))
-        })
+    sortByEndDate(count) {
+        if (count === 0) {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
+                    return new Date(a.endDate).getTime() - new Date(b.endDate).getTime()
+                })
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => {
+                    return new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+                })
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
-    sortByCompleted() {
-        this.setState({
-            taskDetails: Array.from(this.state.taskDetails).sort((a, b) => b.status.localeCompare(a.status))
-        })
+    sortByPriority(count) {
+        if (count === 0) {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => (a.priority - b.priority))
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => (b.priority - a.priority))
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
+    }
+
+    sortByCompleted(count) {
+        if (count === 0) {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => b.status.localeCompare(a.status))
+            })
+            count++
+            this.setState({ sort: count })
+        } else {
+            this.setState({
+                taskDetails: Array.from(this.state.taskDetails).sort((a, b) => a.status.localeCompare(b.status))
+            })
+            count = 0
+            this.setState({ sort: count })
+        }
     }
 
     updateTask(id, name, startDate, endDate, priority, projectId, projectName, parentId, parentName, userId, userName) {
@@ -91,7 +132,6 @@ class ViewTask extends React.Component {
         this.setState({ parentName: parentName });
         this.setState({ userId: userId });
         this.setState({ goToUpdate: 1 })
-
     }
 
     completeTask(id) {
@@ -127,7 +167,6 @@ class ViewTask extends React.Component {
                             : <button type="button" className="btn btn-danger" disabled>COMPLETED TASK</button>}
                     </td>
                 </tr>
-
             )
         )
     }
@@ -135,8 +174,6 @@ class ViewTask extends React.Component {
     setGoToUpdate = () => {
         this.setState({ goToUpdate: 0 })
     }
-
-    
 
     render() {
 
@@ -179,19 +216,19 @@ class ViewTask extends React.Component {
                                 </div>
 
                                 <div className='col-sm-1'>
-                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this)}>StartDate</button>
+                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByStartDate.bind(this, this.state.sort)}>StartDate</button>
                                 </div>
 
                                 <div className='col-sm-1'>
-                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this)}>End Date</button>
+                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByEndDate.bind(this, this.state.sort)}>End Date</button>
                                 </div>
 
                                 <div className='col-sm-1'>
-                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this)}>Priority</button>
+                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByPriority.bind(this, this.state.sort)}>Priority</button>
                                 </div>
 
                                 <div className='col-sm-1'>
-                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this)}>Completed</button>
+                                    <button type='button' className="btn btn-info btn-sm" onClick={this.sortByCompleted.bind(this, this.state.sort)}>Completed</button>
                                 </div>
 
                             </div>

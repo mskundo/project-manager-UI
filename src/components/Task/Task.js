@@ -150,21 +150,16 @@ class Task extends React.Component {
       projectId: this.state.projectId,
       parentId: this.state.parentTaskId
     };
-
-    console.log(task)
-
-    axios.put("http://localhost:9091/projectmanager/tasks/updateTask/"+this.state.id, task).then(res => {
+    axios.put("http://localhost:9091/projectmanager/tasks/updateTask/" + this.state.id, task).then(res => {
       console.log(res.data);
     });
-
     this.props.callBk();
-
   }
 
-  cancelBtnClicked(){
+  cancelBtnClicked() {
     this.setState({
       priority: "0",
-      taskName:'' ,
+      taskName: '',
       project: '',
       parentTask: '',
       user: '',
@@ -190,7 +185,6 @@ class Task extends React.Component {
     }
 
     let filteredItems2;
-
     if (this.state.parentTaskDetails) {
       filteredItems2 = this.state.parentTaskDetails.filter(parentTaskDetails =>
         parentTaskDetails.parentTaskName.toUpperCase().includes(this.state.filterKeyword2.toUpperCase()))
@@ -204,7 +198,6 @@ class Task extends React.Component {
     }
 
     let filteredItems3;
-
     if (this.state.usersDetails) {
       filteredItems3 = this.state.usersDetails.filter(userDetails =>
         userDetails.firstName.toUpperCase().includes(this.state.filterKeyword3.toUpperCase()) ||
@@ -299,7 +292,7 @@ class Task extends React.Component {
                   <label>Parent Task :</label>
                 </div>
                 <div className="col-sm-8">
-                  <input type="text" className="form-control" value={this.state.parentTask}  disabled={!this.state.value} disabled />
+                  <input type="text" className="form-control" value={this.state.parentTask} disabled={!this.state.value} disabled />
                 </div>
                 <div className="col-sm-1">
                   <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal2" onClick={this.componentWillMount} disabled={!this.state.value} >
