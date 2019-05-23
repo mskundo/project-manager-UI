@@ -171,6 +171,7 @@ class Task extends React.Component {
     };
     axios.put(PROJECT_MANAGER_API + "tasks/updateTask/" + this.state.id, task)
     this.props.callBk();
+ 
   }
 
   cancelBtnClicked() {
@@ -246,7 +247,8 @@ class Task extends React.Component {
                   <input type="text" className="form-control" value={this.state.project} disabled />
                 </div>
                 <div className="col-md-1">
-                  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
+                  
+                  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal" disabled = {this.props.update}>Search</button>
                 </div>
                 <div className="modal fade" id="myModal" role="dialog">
                   <div className="modal-dialog">
@@ -388,8 +390,12 @@ class Task extends React.Component {
                 <div className="col-sm-8">
                   <input type="text" className="form-control" value={this.state.user} disabled={!this.state.value} disabled />
                 </div>
+               
                 <div className="col-sm-1">
-                  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal3" disabled={!this.state.value}>Search </button>
+                {this.props.update!==true?
+                  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal3" disabled={!this.state.value}>Search </button>:
+                  <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal3" disabled={!this.state.value} disabled>Search </button>
+                }
                 </div>
                 <div className="modal fade" id="myModal3" role="dialog">
                   <div className="modal-dialog">

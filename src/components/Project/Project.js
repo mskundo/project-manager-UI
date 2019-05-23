@@ -276,13 +276,13 @@ export default class Project extends React.Component {
 
         if (this.state.getProjects) {
             this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
-                .map((getProjects) => {
+                .map((getProjects,i) => {
                     return (
-                        <tbody>
+                        <tbody key={i}>
                             <tr>
                                 <td className='table-style'><b>Project Name :</b></td>
-                                <td key={getProjects.projectRecord.projectId} className='table-style'>{getProjects.projectRecord.projectName}</td>
-                                <td key={getProjects.priority} className=''><b>Priority</b></td>
+                                <td className='table-style'>{getProjects.projectRecord.projectName}</td>
+                                <td className=''><b>Priority</b></td>
                                 <td>
                                     <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
                                         getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
@@ -290,16 +290,16 @@ export default class Project extends React.Component {
                                 </td>
                             </tr>
                             <tr>
-                                <td key={getProjects.completedTask + 1} className='table-style'><b>Completed:  </b>{getProjects.completedTask}</td>
-                                <td key={getProjects.noOfTask + 1} className='table-style'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
-                                <td key={getProjects.projectRecord.priority} className='table-style'>{getProjects.projectRecord.priority}</td>
+                                <td className='table-style'><b>Completed:  </b>{getProjects.completedTask}</td>
+                                <td className='table-style'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
+                                <td className='table-style'>{getProjects.projectRecord.priority}</td>
                                 <td>
                                     <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td key={getProjects.projectRecord.startDate} className='table-style'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
-                                <td key={getProjects.projectRecord.endDate} className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
+                                <td className='table-style'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
+                                <td className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
                                 <td className='table-style'></td>
                             </tr>
                             <tr><td><hr /></td><td><hr /></td><td><hr /></td><td><hr /></td></tr>
@@ -448,7 +448,7 @@ export default class Project extends React.Component {
                         <br />
                         <div className="row">
                             <div className='col-md-12'>
-                                <table className="table table-responsive table-borderless">
+                                <table className="table table-borderless">
                                     {this.renderProject()}
                                 </table>
                             </div>

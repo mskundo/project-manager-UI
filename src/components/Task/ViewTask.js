@@ -178,8 +178,14 @@ class ViewTask extends React.Component {
     }
 
     setGoToUpdate = () => {
-        window.location.reload();
-        
+        this.setState({ goToUpdate: 0 })
+
+    }
+
+    reloadComponent = () => {
+        this.setState({ goToUpdate: 0 })
+        this.setState({ projectName: '' })
+        this.setState({ taskDetails: [] })
     }
 
 
@@ -200,12 +206,12 @@ class ViewTask extends React.Component {
                 {this.state.goToUpdate ?
                     <div> <Task id={this.state.id} taskName={this.state.taskName} startDate={this.state.startDate} endDate={this.state.endDate}
                         priority={this.state.priority} update={true} parentTaskName={this.state.parentName} parentId={this.state.parentId}
-                        projectId={this.state.projectId} projectName={this.state.projectName} userId={this.state.userId} userName={this.state.userName} callBk={this.setGoToUpdate} />
+                        projectId={this.state.projectId} projectName={this.state.projectName} userId={this.state.userId} userName={this.state.userName} callBk={this.reloadComponent.bind(this)} />
                         <button className="btn btn-success" onClick={this.setGoToUpdate.bind(this)}>Go Back</button>
                     </div> :
                     <div className='container-fluid'>
                         <br /><br />
-                        <form className='form-group' classID='myForm'>
+                        <form className='form-group' classID='myForm' id="myNewForm">
                             <div className='row' id="selectProject">
                                 <div className='col-sm-1'></div>
                                 <div className='col-3 col-sm-1'>
