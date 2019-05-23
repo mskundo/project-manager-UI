@@ -121,7 +121,7 @@ class Task extends React.Component {
         }
         axios.post(PROJECT_MANAGER_API + "parentTask/save", parentTask)
         this.setState({
-          project:'',
+          project: '',
           taskName: ''
         })
       } else {
@@ -170,7 +170,6 @@ class Task extends React.Component {
       parentId: this.state.parentTaskId
     };
     axios.put(PROJECT_MANAGER_API + "tasks/updateTask/" + this.state.id, task)
-
     this.props.callBk();
   }
 

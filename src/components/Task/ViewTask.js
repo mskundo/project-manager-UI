@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios'
 import Task from './Task'
 import { PROJECT_MANAGER_API } from '../Constant/Constant'
+import { withRouter } from "react-router-dom";
 
 class ViewTask extends React.Component {
     constructor(props) {
@@ -133,6 +134,10 @@ class ViewTask extends React.Component {
         this.setState({ parentName: parentName });
         this.setState({ userId: userId });
         this.setState({ goToUpdate: 1 })
+        // this.props.history.push('/AddTask',this.state.id)
+        // console.log(this.state.id)
+        // const path = "/UpdateTask/" + this.state.id
+        // this.props.history.push({pathname: path });
     }
 
     completeTask(id) {
@@ -173,7 +178,8 @@ class ViewTask extends React.Component {
     }
 
     setGoToUpdate = () => {
-        this.setState({ goToUpdate: 0 })
+        window.location.reload();
+        
     }
 
 
@@ -290,4 +296,4 @@ class ViewTask extends React.Component {
     }
 }
 
-export default ViewTask;
+export default withRouter(ViewTask);
