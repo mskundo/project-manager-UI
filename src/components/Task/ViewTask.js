@@ -134,10 +134,6 @@ class ViewTask extends React.Component {
         this.setState({ parentName: parentName });
         this.setState({ userId: userId });
         this.setState({ goToUpdate: 1 })
-        // this.props.history.push('/AddTask',this.state.id)
-        // console.log(this.state.id)
-        // const path = "/UpdateTask/" + this.state.id
-        // this.props.history.push({pathname: path });
     }
 
     completeTask(id) {
