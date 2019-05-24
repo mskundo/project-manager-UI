@@ -150,13 +150,13 @@ class ViewTask extends React.Component {
 
     renderTask() {
         return (
-            this.state.taskDetails.map(data =>
-                <tr>
-                    <td key={data.taskName} className='jumbotron'>{data.taskName}</td>
-                    <td key={data.parentName} className='jumbotron'>{data.parentName}</td>
-                    <td key={data.startDate} >{data.startDate}</td>
-                    <td key={data.endDate} >{data.endDate}</td>
-                    <td key={data.priority}>{data.priority}</td>
+            this.state.taskDetails.map((data,i) =>
+                <tr key={i}>
+                    <td className='jumbotron'>{data.taskName}</td>
+                    <td className='jumbotron'>{data.parentName}</td>
+                    <td>{data.startDate}</td>
+                    <td>{data.endDate}</td>
+                    <td>{data.priority}</td>
                     <td>
                         {data.status !== 'complete' ?
                             <div className='row'>
@@ -179,7 +179,6 @@ class ViewTask extends React.Component {
 
     setGoToUpdate = () => {
         this.setState({ goToUpdate: 0 })
-
     }
 
     reloadComponent = () => {
@@ -187,7 +186,6 @@ class ViewTask extends React.Component {
         this.setState({ projectName: '' })
         this.setState({ taskDetails: [] })
     }
-
 
     render() {
         let filteredItems;

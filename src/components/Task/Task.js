@@ -190,6 +190,11 @@ class Task extends React.Component {
     })
   }
 
+  resetParentTask = () => {
+    this.setState({parentTask: ' '})
+    this.setState({parentTaskId: 0})
+  }
+
   render() {
     let filteredItems;
     if (this.state.projectDetails) {
@@ -319,6 +324,12 @@ class Task extends React.Component {
                   <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#myModal2" onClick={this.componentWillMount} disabled={!this.state.value} >
                     Search
               </button>
+
+              <button type="button" className="btn btn-secondary" onClick={this.resetParentTask.bind(this)} disabled={!this.state.value} >
+                    Reset
+              </button>
+
+
                 </div>
                 <div className="modal fade" id="myModal2" role="dialog">
                   <div className="modal-dialog">

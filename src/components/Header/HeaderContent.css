@@ -26,3 +26,7 @@ ul.header li {
     background-color: lightgray ;
     height: 10px;
 }
+
+.active {
+  background-color: white;
+}

@@ -11,7 +11,7 @@ export default class Project extends React.Component {
             startDate: new Date(),
             endDate: new Date().setDate(new Date().getDate() + 1),
             priority: '0',
-            value: true,
+            value: false,
             projectName: '',
             allUsers: [],
             filterKeyword: '',
@@ -21,9 +21,9 @@ export default class Project extends React.Component {
             userId: '',
             userName: '',
             flag: false,
-            projectManager: '',
             sort: 0,
-            errormsg: "Fill the mandetory fields properly!!"
+            errormsg: "Fill the mandetory fields properly!!",
+            checked: false
         };
     }
 
@@ -47,16 +47,12 @@ export default class Project extends React.Component {
 
     cancelCourse = () => {
         this.setState({
-            startDate: '',
-            endDate: '',
+            startDate: new Date(),
+            endDate: new Date().setDate(new Date().getDate() + 1),
             priority: '0',
             value: true,
             projectName: '',
-            usersDetails: [],
-            selectRowProp: [],
             filterKeyword: "",
-            projectManager: '',
-            managerDetails: [],
             addProject: [],
             filteredValue: '',
             flag: false
@@ -103,35 +99,6 @@ export default class Project extends React.Component {
         this.setState({ userId: userDetails.userId })
         let fullName = userDetails.firstName + " " + userDetails.lastName;
         this.setState({ userName: fullName })
-    }
-
-    onSubmit(e) {
-        e.preventDefault();
-        const project = {
-            userId: this.state.userId,
-            projectName: this.state.projectName,
-            startDate: this.state.startDate,
-            endDate: this.state.endDate,
-            priority: this.state.priority
-        }
-        if (this.state.projectName.length > 0 && this.state.userName.length > 0) {
-            axios.post(PROJECT_MANAGER_API + "projects/saveProject", project).then(res => {
-                this.setState({ addProject: res.data })
-                this.getProject()
-            })
-            this.setState(prevState => ({
-                priority: '0',
-                value: true,
-                projectName: '',
-                filterKeyword: "",
-                userName: '',
-                startDate: new Date(),
-                endDate: new Date().setDate(new Date().getDate() + 1),
-            }))
-        }
-        else {
-            swal(this.state.errormsg)
-        }
     }
 
     getProject() {
@@ -219,6 +186,35 @@ export default class Project extends React.Component {
         })
     }
 
+    onSubmit(e) {
+        e.preventDefault();
+        const project = {
+            userId: this.state.userId,
+            projectName: this.state.projectName,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate,
+            priority: this.state.priority
+        }
+        if (this.state.projectName.length > 0 && this.state.userName.length > 0) {
+            axios.post(PROJECT_MANAGER_API + "projects/saveProject", project).then(res => {
+                this.setState({ addProject: res.data })
+                this.getProject()
+            })
+            this.setState(({
+                priority: '0',
+                value: false,
+                projectName: '',
+                filterKeyword: "",
+                userName: '',
+                startDate: new Date(),
+                endDate: new Date().setDate(new Date().getDate() + 1)
+            }))
+        }
+        else {
+            swal(this.state.errormsg)
+        }
+    }
+
     updateProject(id, name, priority, startDate, endDate, userId, userName) {
         this.setState({ flag: true })
         this.setState({ id: id })
@@ -276,34 +272,37 @@ export default class Project extends React.Component {
 
         if (this.state.getProjects) {
             this.state.filteredValue = this.state.getProjects.filter(getProjects => getProjects.projectRecord.projectName.toUpperCase().includes(this.state.searchFilter.toUpperCase()))
-                .map((getProjects,i) => {
+                .map((getProjects, i) => {
                     return (
-                        <tbody key={i}>
-                            <tr>
-                                <td className='table-style'><b>Project Name :</b></td>
-                                <td className='table-style'>{getProjects.projectRecord.projectName}</td>
-                                <td className=''><b>Priority</b></td>
-                                <td>
-                                    <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
-                                        getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
-                                        getProjects.projectRecord.userId, getProjects.projectRecord.userName)}>UPDATE</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='table-style'><b>Completed:  </b>{getProjects.completedTask}</td>
-                                <td className='table-style'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
-                                <td className='table-style'>{getProjects.projectRecord.priority}</td>
-                                <td>
-                                    <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className='table-style'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
-                                <td className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
-                                <td className='table-style'></td>
-                            </tr>
-                            <tr><td><hr /></td><td><hr /></td><td><hr /></td><td><hr /></td></tr>
-                        </tbody>
+                        <div className='row'>
+                            <div className='col-md-2'></div>
+                            <tbody key={i}>
+                                <tr >
+                                    <td className='table-style'><b>Project Name :</b></td>
+                                    <td className='table-style'>{getProjects.projectRecord.projectName}</td>
+                                    <td className=''><b>Priority</b></td>
+                                    <td>
+                                        <button type="button" className="btn btn-primary" onClick={this.updateProject.bind(this, getProjects.projectRecord.projectId, getProjects.projectRecord.projectName,
+                                            getProjects.projectRecord.priority, getProjects.projectRecord.startDate, getProjects.projectRecord.endDate,
+                                            getProjects.projectRecord.userId, getProjects.projectRecord.userName)}>UPDATE</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className='table-style'><b>Completed:  </b>{getProjects.completedTask}</td>
+                                    <td className='table-style'><b>No Of Tasks:  </b>{getProjects.noOfTask}</td>
+                                    <td className='table-style'>{getProjects.projectRecord.priority}</td>
+                                    <td>
+                                        <button type="button" className="btn btn-danger" onClick={this.suspendProject.bind(this, getProjects.projectRecord.projectId)}>SUSPEND</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className='table-style'><b>Start Date: </b> {getProjects.projectRecord.startDate}</td>
+                                    <td className='table-style'><b>End Date:  </b>{getProjects.projectRecord.endDate}</td>
+                                    <td className='table-style'></td>
+                                </tr>
+                                <tr><td><hr /></td><td><hr /></td><td><hr /></td><td><hr /></td></tr>
+                            </tbody>
+                        </div>
                     )
                 });
         }
@@ -330,20 +329,20 @@ export default class Project extends React.Component {
                                 <div className='col-md-3'>
                                     <div className='row'>
                                         <div className='col-md-3'>
-                                            <input type='checkbox' value="" onChange={this.checkBox.bind(this)} />
+                                            <input type='checkbox' checked={this.state.value} onChange={this.checkBox.bind(this)} />
                                         </div>
                                         <div className='col-md-9'>
                                             Set Start Date and End Date
-                                </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className='col-md-7'>
                                     <div className='row'>
                                         <div className='col-md-6'>
-                                            <input type="date" value={this.state.startDate} disabled={this.state.value} onChange={this.handleChangeStartDate.bind(this)} />
+                                            <input type="date" value={this.state.startDate} disabled={!this.state.value} onChange={this.handleChangeStartDate.bind(this)} />
                                         </div>
                                         <div className='col-md-6'>
-                                            <input type="date" min={this.state.startDate} value={this.state.endDate} disabled={this.state.value} onChange={this.handleChangeEndDate.bind(this)} />
+                                            <input type="date" min={this.state.startDate} value={this.state.endDate} disabled={!this.state.value} onChange={this.handleChangeEndDate.bind(this)} />
                                         </div>
                                     </div>
                                 </div>
@@ -369,7 +368,7 @@ export default class Project extends React.Component {
                                     <input type='text' className="form-control" name='manager' value={this.state.userName} disabled />
                                 </div>
                                 <div className='col-md-2'>
-                                    <button type='button' className="form-control btn btn-secondary" data-toggle="modal" data-target="#myModal">Search</button>
+                                    <button type='button' className="form-control btn btn-secondary" data-toggle="modal" disabled={this.state.flag} data-target="#myModal">Search</button>
                                     <div className="modal fade" id="myModal" role="dialog">
                                         <div className="modal-dialog">
                                             <div className='modal-content'>
@@ -447,8 +446,8 @@ export default class Project extends React.Component {
                         </div>
                         <br />
                         <div className="row">
-                            <div className='col-md-12'>
-                                <table className="table table-borderless">
+                            <div className='col-12 col-md-12'>
+                                <table className="table table-responsive table-borderless">
                                     {this.renderProject()}
                                 </table>
                             </div>
